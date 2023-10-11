@@ -1,4 +1,4 @@
-#include "MyMath.h"
+﻿#include "MyMath.h"
 #include "WorldTransform.h"
 #include <Math.h>
 

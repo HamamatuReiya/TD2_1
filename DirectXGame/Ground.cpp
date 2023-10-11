@@ -1,4 +1,4 @@
-#include "Ground.h"
+﻿#include "Ground.h"
 
 void Ground::Initialize(Model* model) {
 	model_ = model;
