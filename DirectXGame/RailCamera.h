@@ -14,5 +14,6 @@ private:
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	float fallY;
+	bool isFall;
 	Input* input_ = nullptr;
 };
