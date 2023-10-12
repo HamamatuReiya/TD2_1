@@ -10,6 +10,10 @@ public:
 	void Draw();
 
 private:
+	//”R—¿
 	int Energy;
+	//‰Á‘¬
+	int Acceleration;
+	//
 
 };
