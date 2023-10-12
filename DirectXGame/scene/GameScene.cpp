@@ -4,7 +4,11 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() { delete player_; }
+GameScene::~GameScene() { delete player_; 
+delete railCamera_;
+	delete debugCamera_;
+delete skydome_;
+}
 
 void GameScene::Initialize() {
 
@@ -15,14 +19,49 @@ void GameScene::Initialize() {
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
+	worldPos.y = 30.0f;
+	railCamera_ = new RailCamera();
+	railCamera_->Initialize(worldPos, rotation);
+
 	player_ = new Player();
 	playerTexture_ = TextureManager::Load("W.jpg");
 	playerModel_ = Model::Create();
-	Vector3 playerPosition(0, 0, 0.0f);
+	Vector3 playerPosition(0, -2.0f, 30.0f);
 	player_->Initialize(playerModel_, playerTexture_, playerPosition);
+	player_->SetParent(&railCamera_->GetWorldTransform());
+
+	debugCamera_ = new DebugCamera(1280, 720);
+
+	skydome_ = new Skydome();
+	skydomeModel_ = Model::CreateFromOBJ("skydome", true);
+	skydome_->Initialize(skydomeModel_);
+
+	ground_ = std::make_unique<Ground>();
+	groundModel_.reset(Model::CreateFromOBJ("Ground", true));
+	ground_->Initialize(groundModel_.get());
 }
 
-void GameScene::Update() { player_->Update(); }
+void GameScene::Update() { 
+	debugCamera_->Update();
+	player_->Update();
+	railCamera_->Update();
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_RETURN)) {
+		isDebugCameraActive_ = true;
+	} else if (input_->TriggerKey(DIK_BACKSPACE)) {
+		isDebugCameraActive_ = false;
+	}
+#endif
+	if (isDebugCameraActive_) {
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+	} else {
+		viewProjection_.matView = railCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+	}
+}
 
 void GameScene::Draw() {
 
@@ -52,6 +91,8 @@ void GameScene::Draw() {
 	/// </summary>
 
 	player_->Draw(viewProjection_);
+	skydome_->Draw(viewProjection_);
+	ground_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
