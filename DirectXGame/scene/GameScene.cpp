@@ -4,10 +4,12 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() { delete player_; 
-delete railCamera_;
+GameScene::~GameScene() { 
+	delete player_; 
+    delete railCamera_;
 	delete debugCamera_;
-delete skydome_;
+    delete skydome_;
+	delete titleSprite_;
 }
 
 void GameScene::Initialize() {
@@ -16,6 +18,13 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	scene = Title;
+	/////////////
+	titleTexture_ = TextureManager::Load("TitleTexture.png");
+	titleSprite_ = Sprite::Create(titleTexture_, {0, 0});
+	/////////////////
+
+	////////////////
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
@@ -39,27 +48,50 @@ void GameScene::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	groundModel_.reset(Model::CreateFromOBJ("Ground", true));
 	ground_->Initialize(groundModel_.get());
+	////////////////
+
 }
 
 void GameScene::Update() { 
-	debugCamera_->Update();
-	player_->Update();
-	railCamera_->Update();
+
+	switch (scene) {
+	case Title:
+		//Qを押してシーンの切り替え
+		if (input_->TriggerKey(DIK_Q)) {
+			scene = Game;
+		}
+
+		break;
+	case Game:
+		if (input_->TriggerKey(DIK_Q)) {
+			scene = GameOver;
+		}
+		debugCamera_->Update();
+		player_->Update();
+		railCamera_->Update();
+		checkAllCollisions();
 #ifdef _DEBUG
-	if (input_->TriggerKey(DIK_RETURN)) {
-		isDebugCameraActive_ = true;
-	} else if (input_->TriggerKey(DIK_BACKSPACE)) {
-		isDebugCameraActive_ = false;
-	}
+		if (input_->TriggerKey(DIK_RETURN)) {
+			isDebugCameraActive_ = true;
+		} else if (input_->TriggerKey(DIK_BACKSPACE)) {
+			isDebugCameraActive_ = false;
+		}
 #endif
-	if (isDebugCameraActive_) {
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
-	} else {
-		viewProjection_.matView = railCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
+		if (isDebugCameraActive_) {
+			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+			viewProjection_.TransferMatrix();
+		} else {
+			viewProjection_.matView = railCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+			viewProjection_.TransferMatrix();
+		}
+		break;
+		case GameOver:
+		if (input_->TriggerKey(DIK_Q)) {
+			scene = Title;
+		}
+		break;
 	}
 }
 
@@ -76,6 +108,12 @@ void GameScene::Draw() {
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 
+	switch (scene) {
+	case Title:
+		titleSprite_->Draw();
+		break;
+	}
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -90,9 +128,19 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 
-	player_->Draw(viewProjection_);
-	skydome_->Draw(viewProjection_);
-	ground_->Draw(viewProjection_);
+	switch (scene) {
+	case Title:
+
+		break;
+	case Game:
+		player_->Draw(viewProjection_);
+		skydome_->Draw(viewProjection_);
+		ground_->Draw(viewProjection_);
+		break;
+	case GameOver:
+
+		break;
+	}
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -110,4 +158,12 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::checkAllCollisions() {
+	Vector3 playerPos;
+	playerPos = player_->GetWorldPosition();
+	if (playerPos.z > 200.0f) {
+		scene = GameOver;
+	}
 }

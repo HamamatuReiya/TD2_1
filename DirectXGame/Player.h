@@ -13,6 +13,7 @@ public:
 	void Update();
 	void Draw(ViewProjection& viewProjection);
 	void SetParent(const WorldTransform* parent);
+	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 	Vector3 GetWorldPosition();
 	void OnCollision();
 
@@ -23,4 +24,5 @@ private:
 	uint32_t textureHandle_ = 0u;
 	Player* player_ = nullptr;
 	Input* input_ = nullptr;
+	bool isDead_ = false;
 };
