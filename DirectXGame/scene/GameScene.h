@@ -1,6 +1,7 @@
-#pragma once
+﻿#pragma once
 
 #include "Audio.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
@@ -9,6 +10,9 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Player.h"
+#include "RailCamera.h"
+#include "Skydome.h"
+#include "Ground.h"
 
 /// <summary>
 /// ゲームシーン
@@ -45,11 +49,26 @@ private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+
 	Player* player_ = nullptr;
 	uint32_t playerTexture_ = 0;
 	Model* playerModel_ = nullptr;
+
+	Vector3 worldPos;
+	Vector3 rotation;
+	RailCamera* railCamera_ = nullptr;
+
+	DebugCamera* debugCamera_ = nullptr;
+	int isDebugCameraActive_;
+
+	Skydome* skydome_ = nullptr;
+	Model* skydomeModel_ = nullptr;
+
+	std::unique_ptr<Ground> ground_;
+	std::unique_ptr<Model> groundModel_;
 
 	/// <summary>
 	/// ゲームシーン用

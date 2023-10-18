@@ -10,7 +10,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	input_ = Input::GetInstance();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
-	worldTransform_.translation_ = {0.0f, 0.0f, -45.0f};
+	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
 	worldTransform_.translation_ = Add(worldTransform_.translation_, playerPosition);
 }
 
