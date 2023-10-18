@@ -1,19 +1,22 @@
-#pragma once
+ï»¿#pragma once
+#include "Model.h"
+#include "WorldTransform.h"
 
-class Item 
-{
+class Item {
 public:
-	void Initialize();
+	void Initialize(Model* model);
 
 	void Update();
 
-	void Draw();
+	void Draw(ViewProjection& viewProjection);
 
 private:
-	//”R—¿
+	WorldTransform worldTransform_;
+	Model* model_ = nullptr;
+	//ç‡ƒæ–™
 	int Energy;
-	//‰Á‘¬
-	int Acceleration;
-	//
-
+	//æ˜Ÿ
+	//int Star;
+	//åŠ é€Ÿ
+	//int acceleration;
 };

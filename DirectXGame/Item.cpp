@@ -1,8 +1,8 @@
-#include "Item.h"
+﻿#include "Item.h"
 
-void Item::Initialize() 
+void Initialize(Model* model)
 {
-
+	
 }
 
 void Item::Update() 
@@ -10,7 +10,7 @@ void Item::Update()
 
 }
 
-void Item::Draw() 
-{
-
+void Draw(ViewProjection& viewProjection)
+{ 
+	
 }
