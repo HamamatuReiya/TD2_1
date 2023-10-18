@@ -4,6 +4,7 @@
 
 class Item {
 public:
+
 	void Initialize(Model* model);
 
 	void Update();
