@@ -45,7 +45,21 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	void checkAllCollisions();
+
 private: // メンバ変数
+
+	enum Scene {
+		Title,
+		Game,
+		GameOver,
+	};
+
+	enum Scene scene;
+
+	uint32_t titleTexture_ = 0;
+	Sprite* titleSprite_ = nullptr;
+
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;

@@ -35,6 +35,9 @@ Vector3 Player::GetWorldPosition() {
 	return worldPos;
 }
 
-void Player::OnCollision() {}
+void Player::OnCollision() { isDead_ = true; }
 
 void Player::SetParent(const WorldTransform* parent) { worldTransform_.parent_ = parent; }
+
+
+
