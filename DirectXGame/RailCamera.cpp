@@ -8,7 +8,7 @@ void RailCamera::Initialize(Vector3& worldPos, Vector3& rotation) {
 	input_ = Input::GetInstance();
 	worldTransform_.translation_ = worldPos;
 	worldTransform_.rotation_ = rotation;
-	worldTransform_.rotation_ = Add(worldTransform_.rotation_, {0.0f, -0.6f, 0.0f});
+	//worldTransform_.rotation_ = Add(worldTransform_.rotation_, {0.0f, -0.0f, 0.0f});
 	viewProjection_.Initialize();
 }
 
@@ -57,7 +57,7 @@ void RailCamera::Update() {
 		fallY = 0.0f;
 	}
 
-	Vector3 move = {0.0f, fallY, 0.1f};
+	Vector3 move = {0.0f, fallY, 0.3f};
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 
 	Vector3 rotate = {0.0f, 0.0f, 0.0f};

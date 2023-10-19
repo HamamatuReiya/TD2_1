@@ -1,5 +1,6 @@
 ﻿#include "GameScene.h"
 #include "TextureManager.h"
+#include <fstream>
 #include <cassert>
 
 GameScene::GameScene() {}
@@ -10,6 +11,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
     delete skydome_;
 	delete titleSprite_;
+	delete item_;
 	for (Item* item : items_) {
 		delete item;
 	}
@@ -51,6 +53,11 @@ void GameScene::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	groundModel_.reset(Model::CreateFromOBJ("Ground", true));
 	ground_->Initialize(groundModel_.get());
+
+	item_ = new Item();
+	itemModel_ = Model::CreateFromOBJ("item", true);
+
+	LoadItemStage1PopData();
 	////////////////
 
 }
@@ -73,6 +80,17 @@ void GameScene::Update() {
 		player_->Update();
 		railCamera_->Update();
 		checkAllCollisions();
+		UpdateItemPopCommands();
+		for (Item* item : items_) {
+			item->Update();
+		}
+		items_.remove_if([](Item* item) {
+			if (item->IsDead()) {
+				delete item;
+				return true;
+			}
+			return false;
+		});
 #ifdef _DEBUG
 		if (input_->TriggerKey(DIK_RETURN)) {
 			isDebugCameraActive_ = true;
@@ -139,6 +157,9 @@ void GameScene::Draw() {
 		player_->Draw(viewProjection_);
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
+		for (Item* item : items_) {
+			item->Draw(viewProjection_);
+		}
 		break;
 	case GameOver:
 
@@ -166,7 +187,76 @@ void GameScene::Draw() {
 void GameScene::checkAllCollisions() {
 	Vector3 playerPos;
 	playerPos = player_->GetWorldPosition();
-	if (playerPos.z > 200.0f) {
+	if (playerPos.z > 400.0f) {
 		scene = GameOver;
+	}
+
+	const float PLAYER_R = 1.0f;
+	const float ITEM_R = 1.0f;
+	Vector3 posA, posB;
+	
+	for (Item* item : items_) {
+		posA = item->GetWorldPosition();
+		posB = player_->GetWorldPosition();
+		float P = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
+		          (posB.z - posA.z) * (posB.z - posA.z);
+		float R = (PLAYER_R + ITEM_R) * (PLAYER_R + ITEM_R);
+		if (P <= R) {
+			item->OnCollision();
+		}
+	}
+	
+
+}
+
+void GameScene::AddItem(Vector3 position) { 
+	Item* item = new Item(); 
+	item->Initialize(itemModel_, position);
+	item->SetGameScene(this);
+	items_.push_back(item);
+}
+
+void GameScene::LoadItemStage1PopData() { 
+	std::ifstream file; 
+    file.open("Resources/stage1ItemPop.csv");
+	assert(file.is_open());
+	itemPopCommands << file.rdbuf();
+	file.close();
+}
+
+void GameScene::UpdateItemPopCommands() {
+	if (standFlag) {
+		standTime--;
+		if (standTime <= 0) {
+			standFlag = false;
+		}
+		return;
+	}
+	std::string line;
+	while (getline(itemPopCommands, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ',');
+		if (word.find("//") == 0) {
+			continue;
+		}
+		if (word.find("POP") == 0) {
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			AddItem(Vector3(x, y, z));
+		} else if (word.find("WAIT") == 0) {
+			getline(line_stream, word, ',');
+			int32_t waitTime = atoi(word.c_str());
+			standFlag = true;
+			standTime = waitTime;
+			break;
+		}
 	}
 }

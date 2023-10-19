@@ -5,15 +5,19 @@
 #include <Sprite.h>
 #include <list>
 
+class GameScene;
+
 class Item {
 public:
 	~Item();
-	void Initialize(Model* model);
+	void Initialize(Model* model,Vector3& position);
 	void Update();
 
 	void Draw(ViewProjection& viewProjection);
 	void OnCollision();
 	Vector3 GetWorldPosition();
+	bool IsDead() const { return isItem_; }
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 private:
 	WorldTransform worldTransform_;
@@ -22,4 +26,5 @@ private:
 	Model* model_ =nullptr;
 	Item* item_ = nullptr;
 	bool isItem_ = false;
+	GameScene* gameScene_ = nullptr;
 };

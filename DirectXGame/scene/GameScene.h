@@ -14,6 +14,7 @@
 #include "Skydome.h"
 #include "Item.h"
 #include "Ground.h"
+#include <sstream>
 
 /// <summary>
 /// ゲームシーン
@@ -47,6 +48,12 @@ public: // メンバ関数
 	void Draw();
 
 	void checkAllCollisions();
+
+	void AddItem(Vector3 position);
+
+	void LoadItemStage1PopData();
+
+	void UpdateItemPopCommands();
 
 private: // メンバ変数
 
@@ -86,7 +93,12 @@ private: // メンバ変数
 	std::unique_ptr<Model> groundModel_;
 
 	Item* item_ = nullptr;
+	Model* itemModel_ = nullptr;
 	std::list<Item*> items_;
+	std::stringstream itemPopCommands;
+
+	int standFlag = false;
+	int standTime = 0;
 
 	/// <summary>
 	/// ゲームシーン用
