@@ -8,7 +8,7 @@
 class Item {
 public:
 	~Item();
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model);
 	void Update();
 	void Draw(ViewProjection& viewProjection);
 	void OnCollision();

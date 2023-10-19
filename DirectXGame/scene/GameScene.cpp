@@ -10,6 +10,9 @@ GameScene::~GameScene() {
 	delete debugCamera_;
     delete skydome_;
 	delete titleSprite_;
+	for (Item* item : items_) {
+		delete item;
+	}
 }
 
 void GameScene::Initialize() {

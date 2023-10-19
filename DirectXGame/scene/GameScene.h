@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "RailCamera.h"
 #include "Skydome.h"
+#include "Item.h"
 #include "Ground.h"
 
 /// <summary>
@@ -83,6 +84,9 @@ private: // メンバ変数
 
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Model> groundModel_;
+
+	Item* item_ = nullptr;
+	std::list<Item*> items_;
 
 	/// <summary>
 	/// ゲームシーン用
