@@ -84,6 +84,10 @@ private: // メンバ変数
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Model> groundModel_;
 
+	uint32_t meterTextur_ = 0;
+	Sprite* meterSprite_ = nullptr;
+	float Meter;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

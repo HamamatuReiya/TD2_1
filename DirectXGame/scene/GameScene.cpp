@@ -10,6 +10,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
     delete skydome_;
 	delete titleSprite_;
+	delete meterSprite_;
 }
 
 void GameScene::Initialize() {
@@ -48,6 +49,10 @@ void GameScene::Initialize() {
 	ground_ = std::make_unique<Ground>();
 	groundModel_.reset(Model::CreateFromOBJ("Ground", true));
 	ground_->Initialize(groundModel_.get());
+
+	meterTextur_ = TextureManager::Load("Meter.png");
+	meterSprite_ = Sprite::Create(meterTextur_, {100, 100});
+	Meter = 100.0f;
 	////////////////
 
 }
@@ -136,6 +141,7 @@ void GameScene::Draw() {
 		player_->Draw(viewProjection_);
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
+
 		break;
 	case GameOver:
 
@@ -153,6 +159,11 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	switch (scene) {
+	case Game:
+		meterSprite_->Draw();
+		break;
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

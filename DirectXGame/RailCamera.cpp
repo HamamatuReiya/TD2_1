@@ -8,7 +8,7 @@ void RailCamera::Initialize(Vector3& worldPos, Vector3& rotation) {
 	input_ = Input::GetInstance();
 	worldTransform_.translation_ = worldPos;
 	worldTransform_.rotation_ = rotation;
-	worldTransform_.rotation_ = Add(worldTransform_.rotation_, {0.0f, -0.6f, 0.0f});
+	//worldTransform_.rotation_ = Add(worldTransform_.rotation_, {0.0f, -0.6f, 0.0f});
 	viewProjection_.Initialize();
 }
 
