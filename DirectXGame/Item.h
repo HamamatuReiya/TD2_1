@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Model.h"
 #include "MyMath.h"
 #include "WorldTransform.h"
@@ -10,6 +10,7 @@ public:
 	~Item();
 	void Initialize(Model* model);
 	void Update();
+
 	void Draw(ViewProjection& viewProjection);
 	void OnCollision();
 	Vector3 GetWorldPosition();

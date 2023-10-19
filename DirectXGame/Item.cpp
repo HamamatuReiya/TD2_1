@@ -1,4 +1,4 @@
-#include "Item.h"
+﻿#include "Item.h"
 
 Item::~Item() {
 
@@ -13,11 +13,13 @@ void Item::Initialize(Model* model) {
 void Item::Update() {
 
 }
-//void Item::Draw(ViewProjection& viewProjection) {
-//
-//}
+void Item::Draw(ViewProjection& viewProjection) 
+{
+	model_->Draw(worldTransform_, viewProjection);
+}
 
-void Item::OnCollision() {
+void Item::OnCollision() {}
+
 
 }
 Vector3 Item::GetWorldPosition() {
