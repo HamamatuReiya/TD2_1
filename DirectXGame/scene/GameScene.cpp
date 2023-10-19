@@ -15,6 +15,7 @@ GameScene::~GameScene() {
 	for (Item* item : items_) {
 		delete item;
 	}
+	delete meterSprite_;
 }
 
 void GameScene::Initialize() {
@@ -58,6 +59,10 @@ void GameScene::Initialize() {
 	itemModel_ = Model::CreateFromOBJ("item", true);
 
 	LoadItemStage1PopData();
+
+	meterTextur_ = TextureManager::Load("Meter.png");
+	meterSprite_ = Sprite::Create(meterTextur_, {100, 100});
+	Meter = 100.0f;
 	////////////////
 
 }
@@ -177,6 +182,11 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	switch (scene) {
+	case Game:
+		meterSprite_->Draw();
+		break;
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
