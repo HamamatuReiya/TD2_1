@@ -6,7 +6,7 @@ Item::~Item() {
 }
 void Item::Initialize(Model* model,Vector3& position) {
 	model_ = model;
-	worldTransform_.scale_ = {2.0f, 2.0f, 2.0f};
+	worldTransform_.scale_ = {1.5f, 1.5f, 1.5f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 	worldTransform_.translation_ = position;
 	worldTransform_.Initialize();
@@ -18,8 +18,6 @@ void Item::Draw(ViewProjection& viewProjection)
 }
 
 void Item::OnCollision() { isItem_ = true; }
-
-
 
 Vector3 Item::GetWorldPosition() {
 	Vector3 worldPos;

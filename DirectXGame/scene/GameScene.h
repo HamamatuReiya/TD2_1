@@ -94,6 +94,7 @@ private: // メンバ変数
 
 	Item* item_ = nullptr;
 	Model* itemModel_ = nullptr;
+	Vector3 itemPos_;
 	std::list<Item*> items_;
 	std::stringstream itemPopCommands;
 

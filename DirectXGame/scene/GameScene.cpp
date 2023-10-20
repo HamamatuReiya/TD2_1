@@ -23,42 +23,43 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	scene = Title;
-	/////////////
-	titleTexture_ = TextureManager::Load("TitleTexture.png");
-	titleSprite_ = Sprite::Create(titleTexture_, {0, 0});
-	/////////////////
+	//scene = Title;
 
-	////////////////
-	worldTransform_.Initialize();
-	viewProjection_.Initialize();
+		/////////////
+		titleTexture_ = TextureManager::Load("TitleTexture.png");
+		titleSprite_ = Sprite::Create(titleTexture_, {0, 0});
+		/////////////////
 
-	worldPos.y = 30.0f;
-	railCamera_ = new RailCamera();
-	railCamera_->Initialize(worldPos, rotation);
+		////////////////
+		worldTransform_.Initialize();
+		viewProjection_.Initialize();
 
-	player_ = new Player();
-	playerTexture_ = TextureManager::Load("W.jpg");
-	playerModel_ = Model::Create();
-	Vector3 playerPosition(0, -2.0f, 30.0f);
-	player_->Initialize(playerModel_, playerTexture_, playerPosition);
-	player_->SetParent(&railCamera_->GetWorldTransform());
+		worldPos.y = 30.0f;
+		railCamera_ = new RailCamera();
+		railCamera_->Initialize(worldPos, rotation);
 
-	debugCamera_ = new DebugCamera(1280, 720);
+		player_ = new Player();
+		playerTexture_ = TextureManager::Load("W.jpg");
+		playerModel_ = Model::Create();
+		Vector3 playerPosition(0, -2.0f, 30.0f);
+		player_->Initialize(playerModel_, playerTexture_, playerPosition);
+		player_->SetParent(&railCamera_->GetWorldTransform());
 
-	skydome_ = new Skydome();
-	skydomeModel_ = Model::CreateFromOBJ("skydome", true);
-	skydome_->Initialize(skydomeModel_);
+		debugCamera_ = new DebugCamera(1280, 720);
 
-	ground_ = std::make_unique<Ground>();
-	groundModel_.reset(Model::CreateFromOBJ("Ground", true));
-	ground_->Initialize(groundModel_.get());
+		skydome_ = new Skydome();
+		skydomeModel_ = Model::CreateFromOBJ("skydome", true);
+		skydome_->Initialize(skydomeModel_);
 
-	item_ = new Item();
-	itemModel_ = Model::CreateFromOBJ("item", true);
+		ground_ = std::make_unique<Ground>();
+		groundModel_.reset(Model::CreateFromOBJ("Ground", true));
+		ground_->Initialize(groundModel_.get());
 
-	LoadItemStage1PopData();
-	////////////////
+		item_ = new Item();
+		itemModel_ = Model::CreateFromOBJ("item", true);
+	    
+		LoadItemStage1PopData();
+		////////////////
 
 }
 
@@ -70,8 +71,8 @@ void GameScene::Update() {
 		if (input_->TriggerKey(DIK_Q)) {
 			scene = Game;
 		}
-
 		break;
+
 	case Game:
 		if (input_->TriggerKey(DIK_Q)) {
 			scene = GameOver;
@@ -108,7 +109,9 @@ void GameScene::Update() {
 			viewProjection_.TransferMatrix();
 		}
 		break;
+
 		case GameOver:
+		Initialize();
 		if (input_->TriggerKey(DIK_Q)) {
 			scene = Title;
 		}
@@ -134,6 +137,7 @@ void GameScene::Draw() {
 		titleSprite_->Draw();
 		break;
 	}
+
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

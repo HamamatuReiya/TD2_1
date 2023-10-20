@@ -6,6 +6,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	assert(model);
 	model_ = model;
 	textureHandle_ = textureHandle;
+	isDead_ = false;
 	worldTransform_.Initialize();
 	input_ = Input::GetInstance();
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};

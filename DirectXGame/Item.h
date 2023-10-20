@@ -17,6 +17,7 @@ public:
 	void OnCollision();
 	Vector3 GetWorldPosition();
 	bool IsDead() const { return isItem_; }
+	void SetIsItem(bool isItem) { isItem_ = isItem; }
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 private:
