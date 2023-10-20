@@ -101,6 +101,10 @@ private: // メンバ変数
 	int standFlag = false;
 	int standTime = 0;
 
+	uint32_t meterTextur_ = 0;
+	Sprite* meterSprite_ = nullptr;
+	float Meter;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

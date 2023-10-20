@@ -15,6 +15,7 @@ GameScene::~GameScene() {
 	for (Item* item : items_) {
 		delete item;
 	}
+	delete meterSprite_;
 }
 
 void GameScene::Initialize() {
@@ -55,11 +56,15 @@ void GameScene::Initialize() {
 		groundModel_.reset(Model::CreateFromOBJ("Ground", true));
 		ground_->Initialize(groundModel_.get());
 
-		item_ = new Item();
-		itemModel_ = Model::CreateFromOBJ("item", true);
-	    
-		LoadItemStage1PopData();
-		////////////////
+	item_ = new Item();
+	itemModel_ = Model::CreateFromOBJ("item", true);
+
+	LoadItemStage1PopData();
+
+	meterTextur_ = TextureManager::Load("Meter.png");
+	meterSprite_ = Sprite::Create(meterTextur_, {100, 600});
+	Meter = -500.0f;
+	////////////////
 
 }
 
@@ -92,6 +97,15 @@ void GameScene::Update() {
 			}
 			return false;
 		});
+
+		Vector2 size = meterSprite_->GetSize();
+		size.y = Meter;
+		if (input_->PushKey(DIK_SPACE) && Meter < 0.0f) {
+			Meter += 2.0f;
+		}
+		meterSprite_->SetSize(size);
+
+
 #ifdef _DEBUG
 		if (input_->TriggerKey(DIK_RETURN)) {
 			isDebugCameraActive_ = true;
@@ -181,6 +195,11 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	switch (scene) {
+	case Game:
+		meterSprite_->Draw();
+		break;
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
