@@ -61,8 +61,8 @@ void GameScene::Initialize() {
 	LoadItemStage1PopData();
 
 	meterTextur_ = TextureManager::Load("Meter.png");
-	meterSprite_ = Sprite::Create(meterTextur_, {100, 100});
-	Meter = 100.0f;
+	meterSprite_ = Sprite::Create(meterTextur_, {100, 600});
+	Meter = -500.0f;
 	////////////////
 
 }
@@ -96,6 +96,15 @@ void GameScene::Update() {
 			}
 			return false;
 		});
+
+		Vector2 size = meterSprite_->GetSize();
+		size.y = Meter;
+		if (input_->PushKey(DIK_SPACE) && Meter < 0.0f) {
+			Meter += 2.0f;
+		}
+		meterSprite_->SetSize(size);
+
+
 #ifdef _DEBUG
 		if (input_->TriggerKey(DIK_RETURN)) {
 			isDebugCameraActive_ = true;
