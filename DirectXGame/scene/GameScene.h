@@ -13,6 +13,7 @@
 #include "RailCamera.h"
 #include "Skydome.h"
 #include "Ground.h"
+#include "Obstacle.h"
 
 /// <summary>
 /// ゲームシーン
@@ -45,6 +46,11 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// 衝突判定と応答
+	/// </summary>
+	void CheckAllCollisions();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -69,6 +75,10 @@ private: // メンバ変数
 
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Model> groundModel_;
+
+	Obstacle* obstacle_ = nullptr;
+	uint32_t building_ = 0;
+	Model* obstacleModel_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用

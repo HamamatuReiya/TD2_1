@@ -30,6 +30,17 @@ void GameScene::Initialize() {
 	player_->Initialize(playerModel_, playerTexture_, playerPosition);
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
+	/*obstacle_ = new Obstacle();
+	building_ = TextureManager::Load("black.png");
+	obstacleModel_ = Model::Create();
+	Vector3 obstaclePosition(0.0f, 10.0f, 50.0f);
+	obstacle_->Initialize(obstacleModel_, building_, obstaclePosition);*/
+	obstacle_ = new Obstacle();
+	Vector3 obstaclePosition(0.0f, 10.0f, 50.0f);
+	building_ = TextureManager::Load("black.png");
+	obstacle_->Initialize(obstacleModel_, building_, obstaclePosition);
+
+
 	debugCamera_ = new DebugCamera(1280, 720);
 
 	skydome_ = new Skydome();
@@ -93,6 +104,7 @@ void GameScene::Draw() {
 	player_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
+	obstacle_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -111,3 +123,29 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
+void GameScene::CheckAllCollisions(){
+	//判定対象AとBの座標
+	Vector3 posA, posB;
+	#pragma region 自キャラと障害物の当たり判定
+	//自キャラの座標
+	posA = player_->GetWorldPosition();
+
+	//障害物の座標
+	posB = obstacle_->GetWorldPosition();
+
+	float a = posB.x - posA.x;
+	float b = posB.y - posA.y;
+	float c = posB.z - posA.z;
+
+	float d = sqrtf(a * a + b * b + c * c);
+
+	if (d <= 6.0f) {
+		// 自キャラの衝突時コールバックを呼び出す
+		player_->OnCollision();
+		// 障害物の衝突時コールバックを呼び出す
+		obstacle_->OnCollision();
+	}
+
+	#pragma endregion
+};
