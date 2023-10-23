@@ -10,17 +10,19 @@ class Obstacle {
 
 public:
 	
-	void Initialize(Model* model, uint32_t obstacle, Vector3& obstaclePosition);
+	void Initialize(Model* model, uint32_t obstacle/*, Vector3& obstaclePosition*/);
 	void Draw(ViewProjection& viewProjection);
-	void OnCollision();
+	/*void OnCollision();*/
 	Vector3 GetWorldPosition();
 
 private:
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+	//モデル
 	Model* model_ = nullptr;
+	//テクスチャハンドル
 	uint32_t building_ = 0u;
 	Obstacle* obstacle_ = nullptr;
 	bool isDead_ = false;
-	Vector3 obstaclePosition_;
+	/*Vector3 obstaclePosition_;*/
 };

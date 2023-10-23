@@ -50,10 +50,10 @@ void GameScene::Initialize() {
 	obstacleModel_ = Model::Create();
 	Vector3 obstaclePosition(0.0f, 10.0f, 50.0f);
 	obstacle_->Initialize(obstacleModel_, building_, obstaclePosition);*/
-	obstacle_ = new Obstacle();
-	Vector3 obstaclePosition(0.0f, 10.0f, 50.0f);
 	building_ = TextureManager::Load("black.png");
-	obstacle_->Initialize(obstacleModel_, building_, obstaclePosition);
+	obstacle_ = new Obstacle();
+	obstacleModel_ = Model::Create();
+	obstacle_->Initialize(obstacleModel_, building_);
 
 
 	debugCamera_ = new DebugCamera(1280, 720);
@@ -182,6 +182,7 @@ void GameScene::Draw() {
 		player_->Draw(viewProjection_);
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
+		obstacle_->Draw(viewProjection_);
 		for (Item* item : items_) {
 			item->Draw(viewProjection_);
 		}
