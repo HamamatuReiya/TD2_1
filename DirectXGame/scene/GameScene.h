@@ -12,8 +12,9 @@
 #include "Player.h"
 #include "RailCamera.h"
 #include "Skydome.h"
+#include "Item.h"
 #include "Ground.h"
-#include "Obstacle.h"
+#include <sstream>
 
 /// <summary>
 /// ゲームシーン
@@ -46,12 +47,27 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	/// <summary>
-	/// 衝突判定と応答
-	/// </summary>
-	void CheckAllCollisions();
+	void checkAllCollisions();
+
+	void AddItem(Vector3 position);
+
+	void LoadItemStage1PopData();
+
+	void UpdateItemPopCommands();
 
 private: // メンバ変数
+
+	enum Scene {
+		Title,
+		Game,
+		GameOver,
+	};
+
+	enum Scene scene;
+
+	uint32_t titleTexture_ = 0;
+	Sprite* titleSprite_ = nullptr;
+
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -76,9 +92,17 @@ private: // メンバ変数
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Model> groundModel_;
 
-	Obstacle* obstacle_ = nullptr;
-	uint32_t building_ = 0;
-	Model* obstacleModel_ = nullptr;
+	Item* item_ = nullptr;
+	Model* itemModel_ = nullptr;
+	std::list<Item*> items_;
+	std::stringstream itemPopCommands;
+
+	int standFlag = false;
+	int standTime = 0;
+
+	uint32_t meterTextur_ = 0;
+	Sprite* meterSprite_ = nullptr;
+	float Meter;
 
 	/// <summary>
 	/// ゲームシーン用
