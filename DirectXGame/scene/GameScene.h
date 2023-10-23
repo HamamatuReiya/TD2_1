@@ -55,6 +55,8 @@ public: // メンバ関数
 
 	void UpdateItemPopCommands();
 
+	void ItemDelete();
+
 private: // メンバ変数
 
 	enum Scene {
@@ -103,7 +105,7 @@ private: // メンバ変数
 
 	uint32_t meterTextur_ = 0;
 	Sprite* meterSprite_ = nullptr;
-	float Meter;
+	float meter;
 
 	/// <summary>
 	/// ゲームシーン用

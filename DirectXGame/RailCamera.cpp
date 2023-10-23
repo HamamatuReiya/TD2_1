@@ -4,6 +4,7 @@
 
 void RailCamera::Initialize(Vector3& worldPos, Vector3& rotation) {
 	isFall = true;
+	isMeter_ = true;
 	worldTransform_.Initialize();
 	input_ = Input::GetInstance();
 	worldTransform_.translation_ = worldPos;
@@ -15,14 +16,16 @@ void RailCamera::Initialize(Vector3& worldPos, Vector3& rotation) {
 void RailCamera::Update() {
 
 	isFall = true;
+	if (isMeter_ == true) {
 
-	if (input_->PushKey(DIK_SPACE)) {
-		isFall = false;
-		// 上昇速度
-		fallY += 0.0075f;
+		if (input_->PushKey(DIK_SPACE)) {
+			isFall = false;
+			// 上昇速度
+			fallY += 0.0075f;
 
-		if (fallY < 0) {
-			fallY += 0.025f;
+			if (fallY < 0) {
+				fallY += 0.025f;
+			}
 		}
 	}
 

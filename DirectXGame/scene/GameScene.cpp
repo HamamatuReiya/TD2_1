@@ -63,7 +63,7 @@ void GameScene::Initialize() {
 
 	meterTextur_ = TextureManager::Load("Meter.png");
 	meterSprite_ = Sprite::Create(meterTextur_, {100, 600});
-	Meter = -500.0f;
+	meter = -500.0f;
 	////////////////
 
 }
@@ -99,11 +99,17 @@ void GameScene::Update() {
 		});
 
 		Vector2 size = meterSprite_->GetSize();
-		size.y = Meter;
-		if (input_->PushKey(DIK_SPACE) && Meter < 0.0f) {
-			Meter += 2.0f;
+		size.y = meter;
+		if (input_->PushKey(DIK_SPACE) && meter < 0.0f) {
+			meter += 2.0f;
 		}
 		meterSprite_->SetSize(size);
+
+		if (meter < 0) {
+			railCamera_->SetisMeter(true);
+		} else {
+			railCamera_->SetisMeter(false);
+		}
 
 
 #ifdef _DEBUG
@@ -129,6 +135,7 @@ void GameScene::Update() {
 		if (input_->TriggerKey(DIK_Q)) {
 			scene = Title;
 		}
+		ItemDelete();
 		break;
 	}
 }
@@ -180,7 +187,7 @@ void GameScene::Draw() {
 		}
 		break;
 	case GameOver:
-
+		
 		break;
 	}
 
@@ -230,6 +237,13 @@ void GameScene::checkAllCollisions() {
 	}
 	
 
+}
+
+void GameScene::ItemDelete() { 
+	/*for (Item* item : items_) {
+		delete item;
+	}*/
+	LoadItemStage1PopData();
 }
 
 void GameScene::AddItem(Vector3 position) { 

@@ -9,6 +9,7 @@ public:
 	void Update();
 	ViewProjection& GetViewProjection() { return viewProjection_; }
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
+	void  SetisMeter(bool isMeter) {isMeter_ = isMeter; }
 
 private:
 	WorldTransform worldTransform_;
@@ -16,4 +17,5 @@ private:
 	float fallY;
 	bool isFall;
 	Input* input_ = nullptr;
+	bool isMeter_=true;
 };
