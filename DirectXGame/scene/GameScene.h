@@ -14,6 +14,7 @@
 #include "Skydome.h"
 #include "Item.h"
 #include "Ground.h"
+#include "Obstacle.h"
 #include <sstream>
 
 /// <summary>
@@ -106,6 +107,13 @@ private: // メンバ変数
 	uint32_t meterTextur_ = 0;
 	Sprite* meterSprite_ = nullptr;
 	float meter;
+
+	// 障害物3Dモデル
+	Model* obstacleModel_ = nullptr;
+	// 障害物
+	Obstacle* obstacle_ = nullptr;
+	// 障害物テクスチャハンドル
+	uint32_t building_ = 0;
 
 	/// <summary>
 	/// ゲームシーン用

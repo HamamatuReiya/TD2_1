@@ -46,7 +46,18 @@ void GameScene::Initialize() {
 		player_->Initialize(playerModel_, playerTexture_, playerPosition);
 		player_->SetParent(&railCamera_->GetWorldTransform());
 
-		debugCamera_ = new DebugCamera(1280, 720);
+	/*obstacle_ = new Obstacle();
+	building_ = TextureManager::Load("black.png");
+	obstacleModel_ = Model::Create();
+	Vector3 obstaclePosition(0.0f, 10.0f, 50.0f);
+	obstacle_->Initialize(obstacleModel_, building_, obstaclePosition);*/
+	building_ = TextureManager::Load("black.png");
+	obstacle_ = new Obstacle();
+	obstacleModel_ = Model::Create();
+	obstacle_->Initialize(obstacleModel_, building_);
+
+
+	debugCamera_ = new DebugCamera(1280, 720);
 
 		skydome_ = new Skydome();
 		skydomeModel_ = Model::CreateFromOBJ("skydome", true);
@@ -182,6 +193,7 @@ void GameScene::Draw() {
 		player_->Draw(viewProjection_);
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
+		obstacle_->Draw(viewProjection_);
 		for (Item* item : items_) {
 			item->Draw(viewProjection_);
 		}
