@@ -10,12 +10,22 @@ GameScene::~GameScene() {
     delete railCamera_;
 	delete debugCamera_;
     delete skydome_;
-	delete titleSprite_;
 	delete item_;
 	for (Item* item : items_) {
 		delete item;
 	}
 	delete meterSprite_;
+	delete meterFlameSprite_;
+	delete titleTextSprite_;
+	delete titleBackSprite_;
+	delete pressSpaceSprite_;
+	delete stage1Sprite_;
+	delete stage1SelectSprite_;
+	delete stage2Sprite_;
+	delete stage2SelectSprite_;
+	delete explanationSprite_;
+	delete gameOverSprite_;
+	delete gameClearSprite_;
 }
 
 void GameScene::Initialize() {
@@ -24,27 +34,55 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	//scene = Title;
+	// scene = Title;
 
-		/////////////
-		titleTexture_ = TextureManager::Load("TitleTexture.png");
-		titleSprite_ = Sprite::Create(titleTexture_, {0, 0});
-		/////////////////
+	/////////////
+	titleTextTexture_ = TextureManager::Load("TitleText.png");
+	titleTextSprite_ = Sprite::Create(titleTextTexture_, {0, 0});
 
-		////////////////
-		worldTransform_.Initialize();
-		viewProjection_.Initialize();
+	titleBackTexture_ = TextureManager::Load("TitleBack.png");
+	titleBackSprite_ = Sprite::Create(titleBackTexture_, {0, 0});
 
-		worldPos.y = 30.0f;
-		railCamera_ = new RailCamera();
-		railCamera_->Initialize(worldPos, rotation);
+	pressSpaceTexture_ = TextureManager::Load("PRESSSPACE.png");
+	pressSpaceSprite_ = Sprite::Create(pressSpaceTexture_, {0, 0});
+	spaceKeyBlinking_ = 0;
+	isSpaceKeyBlinking_ = true;
 
-		player_ = new Player();
-		playerTexture_ = TextureManager::Load("W.jpg");
-		playerModel_ = Model::Create();
-		Vector3 playerPosition(0, -2.0f, 30.0f);
-		player_->Initialize(playerModel_, playerTexture_, playerPosition);
-		player_->SetParent(&railCamera_->GetWorldTransform());
+	stage1Texture_ = TextureManager::Load("STAGE1.png");
+	stage1Sprite_ = Sprite::Create(stage1Texture_, {0, 0});
+
+	stage1SelectTexture_ = TextureManager::Load("STAGE1SELECT.png");
+	stage1SelectSprite_ = Sprite::Create(stage1SelectTexture_, {0, 0});
+
+	stage2Texture_ = TextureManager::Load("STAGE2.png");
+	stage2Sprite_ = Sprite::Create(stage2Texture_, {0, 0});
+	stage2SelectTexture_ = TextureManager::Load("STAGE2SELECT.png");
+	stage2SelectSprite_ = Sprite::Create(stage2SelectTexture_, {0, 0});
+	if (isStage1Clear_ == true) {
+		stage2Color_ = {1, 1, 1, 1};
+	}
+	stage2Sprite_->SetColor(stage2Color_);
+
+	/////////////////
+
+	////////////////
+	worldTransform_.Initialize();
+	viewProjection_.Initialize();
+
+	isStagePushSpace_ = false;
+	isStageUpdate_ = true;
+	isPlayerPosY_ = false;
+
+	//プレイヤーの初期位置
+	worldPos.y = 50.0f;
+	railCamera_ = new RailCamera();
+	railCamera_->Initialize(worldPos, rotation);
+
+	player_ = new Player();
+	playerModel_ = Model::CreateFromOBJ("Player", true);
+	Vector3 playerPosition(0, -2.0f, 30.0f);
+	player_->Initialize(playerModel_, playerPosition);
+	player_->SetParent(&railCamera_->GetWorldTransform());
 
 	/*obstacle_ = new Obstacle();
 	building_ = TextureManager::Load("black.png");
@@ -56,25 +94,36 @@ void GameScene::Initialize() {
 	obstacleModel_ = Model::Create();
 	obstacle_->Initialize(obstacleModel_, building_);
 
-
 	debugCamera_ = new DebugCamera(1280, 720);
 
-		skydome_ = new Skydome();
-		skydomeModel_ = Model::CreateFromOBJ("skydome", true);
-		skydome_->Initialize(skydomeModel_);
+	skydome_ = new Skydome();
+	skydomeModel_ = Model::CreateFromOBJ("skydome", true);
+	skydome_->Initialize(skydomeModel_);
 
-		ground_ = std::make_unique<Ground>();
-		groundModel_.reset(Model::CreateFromOBJ("Ground", true));
-		ground_->Initialize(groundModel_.get());
+	ground_ = std::make_unique<Ground>();
+	groundModel_.reset(Model::CreateFromOBJ("Ground", true));
+	ground_->Initialize(groundModel_.get());
 
 	item_ = new Item();
 	itemModel_ = Model::CreateFromOBJ("item", true);
 
-	LoadItemStage1PopData();
-
 	meterTextur_ = TextureManager::Load("Meter.png");
 	meterSprite_ = Sprite::Create(meterTextur_, {100, 600});
 	meter = -500.0f;
+
+	meterFlameTexture_ = TextureManager::Load("MeterFlame.png");
+	meterFlameSprite_ = Sprite::Create(meterFlameTexture_, {97, 97});
+
+	explanationTexture_ = TextureManager::Load("explanation.png");
+	explanationSprite_ = Sprite::Create(explanationTexture_, {0, 0});
+
+	gameOverTexture_ = TextureManager::Load("GameOver.png");
+	gameOverSprite_ = Sprite::Create(gameOverTexture_, {0, 0});
+
+	gameClearTexture_ = TextureManager::Load("GameClear.png");
+	gameClearSprite_ = Sprite::Create(gameClearTexture_, {0, 0});
+	isGameClear_ = false;
+
 	////////////////
 
 }
@@ -83,19 +132,147 @@ void GameScene::Update() {
 
 	switch (scene) {
 	case Title:
-		//Qを押してシーンの切り替え
-		if (input_->TriggerKey(DIK_Q)) {
-			scene = Game;
-		}
-		break;
 
-	case Game:
-		if (input_->TriggerKey(DIK_Q)) {
-			scene = GameOver;
+		switch (titleScene) {
+		case Start:
+			spaceKeyBlinking_++;
+			if (spaceKeyBlinking_ >= 60) {
+				spaceKeyBlinking_ = 0;
+			}
+			if (spaceKeyBlinking_ >= 30) {
+				isSpaceKeyBlinking_ = false;
+			} else {
+				isSpaceKeyBlinking_ = true;
+			}
+			// SPACEを押してシーンの切り替え
+			if (input_->TriggerKey(DIK_SPACE)) {
+				titleScene = Select;
+			}
+			break;
+
+			case Select:
+			if (isStage1Clear_ == true) {
+				if (input_->TriggerKey(DIK_LEFTARROW)) {
+					isSelectStage1 = true;
+				} else if (input_->TriggerKey(DIK_RIGHTARROW)) {
+					isSelectStage1 = false;
+				}
+			}
+			if (input_->TriggerKey(DIK_SPACE)) {
+				//ステージの選択
+				if (isSelectStage1 == true) {
+					LoadItemStage1PopData();
+					scene = Stage1;
+					spaceKeyBlinking_ = 0;
+					isSpaceKeyBlinking_ = true;
+				}
+				if (isSelectStage1 == false) {
+					scene = Stage2;
+					spaceKeyBlinking_ = 0;
+					isSpaceKeyBlinking_ = true;
+				}
+			}
+			break;
+		}
+
+		break;
+		//////////ステージ1//////////////
+	case Stage1:
+		if (isGameClear_ == false) {
+
+			if (input_->TriggerKey(DIK_SPACE)) {
+				isStagePushSpace_ = true;
+			}
+			if (isStagePushSpace_ == true) {
+				railCamera_->Update();
+				player_->Update();
+				if (input_->PushKey(DIK_SPACE) && meter < 0.0f) {
+					meter += 2.0f;
+				}
+				isPlayerPosY_ = true;
+			}
+		}
+
+		if (isGameClear_ == true) {
+			if (input_->TriggerKey(DIK_SPACE)) {
+				scene = Title;
+				Initialize();
+			}
+		}
+
+		debugCamera_->Update();
+			checkAllCollisions();
+			UpdateItemPopCommands();
+			for (Item* item : items_) {
+				item->Update();
+			}
+			items_.remove_if([](Item* item) {
+				if (item->IsDead()) {
+					delete item;
+					return true;
+				}
+				return false;
+			});
+
+			size = meterSprite_->GetSize();
+			size.y = meter;
+			
+			meterSprite_->SetSize(size);
+
+			if (meter <= -500) {
+				meter = -500;
+			}
+
+			if (meter < 0) {
+				railCamera_->SetisMeter(true);
+			} else {
+				railCamera_->SetisMeter(false);
+			}
+
+			
+
+#ifdef _DEBUG
+			if (input_->TriggerKey(DIK_RETURN)) {
+				isDebugCameraActive_ = true;
+			} else if (input_->TriggerKey(DIK_BACKSPACE)) {
+				isDebugCameraActive_ = false;
+			}
+#endif
+			if (isDebugCameraActive_) {
+				viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+				viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+				viewProjection_.TransferMatrix();
+			} else {
+				viewProjection_.matView = railCamera_->GetViewProjection().matView;
+				viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+				viewProjection_.TransferMatrix();
+			}
+		
+		break;
+		///////////ステージ2////////////
+	case Stage2:
+		if (isGameClear_ == false) {
+
+			    if (input_->TriggerKey(DIK_SPACE)) {
+				isStagePushSpace_ = true;
+			    }
+			    if (isStagePushSpace_ == true) {
+				railCamera_->Update();
+				player_->Update();
+				if (input_->PushKey(DIK_SPACE) && meter < 0.0f) {
+					meter += 2.0f;
+				}
+				isPlayerPosY_ = true;
+			    }
+		}
+
+		if (isGameClear_ == true) {
+			    if (input_->TriggerKey(DIK_SPACE)) {
+				scene = Title;
+				Initialize();
+			    }
 		}
 		debugCamera_->Update();
-		player_->Update();
-		railCamera_->Update();
 		checkAllCollisions();
 		UpdateItemPopCommands();
 		for (Item* item : items_) {
@@ -109,19 +286,20 @@ void GameScene::Update() {
 			return false;
 		});
 
-		Vector2 size = meterSprite_->GetSize();
+		size = meterSprite_->GetSize();
 		size.y = meter;
-		if (input_->PushKey(DIK_SPACE) && meter < 0.0f) {
-			meter += 2.0f;
-		}
+		
 		meterSprite_->SetSize(size);
+
+		if (meter <= -500) {
+			meter = -500;
+		}
 
 		if (meter < 0) {
 			railCamera_->SetisMeter(true);
 		} else {
 			railCamera_->SetisMeter(false);
 		}
-
 
 #ifdef _DEBUG
 		if (input_->TriggerKey(DIK_RETURN)) {
@@ -142,13 +320,15 @@ void GameScene::Update() {
 		break;
 
 		case GameOver:
-		Initialize();
-		if (input_->TriggerKey(DIK_Q)) {
+		
+		if (input_->TriggerKey(DIK_SPACE)) {
 			scene = Title;
+			Initialize();
 		}
-		ItemDelete();
 		break;
+	    
 	}
+
 }
 
 void GameScene::Draw() {
@@ -166,7 +346,25 @@ void GameScene::Draw() {
 
 	switch (scene) {
 	case Title:
-		titleSprite_->Draw();
+		titleBackSprite_->Draw();
+		switch (titleScene) {
+		case Start:
+			titleTextSprite_->Draw();
+			if (isSpaceKeyBlinking_ == true) {
+				pressSpaceSprite_->Draw();
+			}
+			break;
+
+			case Select:
+			stage1Sprite_->Draw();
+			stage2Sprite_->Draw();
+			if (isSelectStage1 == true) {
+				stage1SelectSprite_->Draw();
+			} else {
+				stage2SelectSprite_->Draw();
+			}
+			break;
+		}
 		break;
 	}
 
@@ -189,7 +387,16 @@ void GameScene::Draw() {
 	case Title:
 
 		break;
-	case Game:
+	case Stage1:
+		player_->Draw(viewProjection_);
+		skydome_->Draw(viewProjection_);
+		ground_->Draw(viewProjection_);
+		obstacle_->Draw(viewProjection_);
+		for (Item* item : items_) {
+			item->Draw(viewProjection_);
+		}
+		break;
+	case Stage2:
 		player_->Draw(viewProjection_);
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
@@ -215,8 +422,28 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 	switch (scene) {
-	case Game:
+	case Stage1:
+		meterFlameSprite_->Draw();
 		meterSprite_->Draw();
+		if (isStagePushSpace_ == false) {
+			explanationSprite_->Draw();
+		}
+		if (isGameClear_ == true) {
+			gameClearSprite_->Draw();
+		}
+		break;
+	case Stage2:
+		meterFlameSprite_->Draw();
+		meterSprite_->Draw();
+		if (isStagePushSpace_ == false) {
+			explanationSprite_->Draw();
+		}
+		if (isGameClear_ == true) {
+			gameClearSprite_->Draw();
+		}
+		break;
+	case GameOver:
+		gameOverSprite_->Draw();
 		break;
 	}
 
@@ -230,11 +457,18 @@ void GameScene::checkAllCollisions() {
 	Vector3 playerPos;
 	playerPos = player_->GetWorldPosition();
 	if (playerPos.z > 400.0f) {
-		scene = GameOver;
+		isGameClear_ = true;
+		isStage1Clear_ = true;
 	}
 
-	const float PLAYER_R = 1.0f;
-	const float ITEM_R = 1.0f;
+	if (isPlayerPosY_ == true) {
+		if (playerPos.y <= 1.0f) {
+			scene = GameOver;
+		}
+	}
+
+	const float PLAYER_R = 1.5f;
+	const float ITEM_R = 1.5f;
 	Vector3 posA, posB;
 	
 	for (Item* item : items_) {
@@ -245,6 +479,7 @@ void GameScene::checkAllCollisions() {
 		float R = (PLAYER_R + ITEM_R) * (PLAYER_R + ITEM_R);
 		if (P <= R) {
 			item->OnCollision();
+			meter -= 250;
 		}
 	}
 	
@@ -255,7 +490,6 @@ void GameScene::ItemDelete() {
 	/*for (Item* item : items_) {
 		delete item;
 	}*/
-	LoadItemStage1PopData();
 }
 
 void GameScene::AddItem(Vector3 position) { 

@@ -62,14 +62,19 @@ private: // メンバ変数
 
 	enum Scene {
 		Title,
-		Game,
+		Stage1,
+		Stage2,
 		GameOver,
 	};
 
 	enum Scene scene;
 
-	uint32_t titleTexture_ = 0;
-	Sprite* titleSprite_ = nullptr;
+	enum TitleScene {
+		Start,
+		Select,
+	};
+
+	enum TitleScene titleScene;
 
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -79,8 +84,8 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 
 	Player* player_ = nullptr;
-	uint32_t playerTexture_ = 0;
 	Model* playerModel_ = nullptr;
+	bool isPlayerPosY_;
 
 	Vector3 worldPos;
 	Vector3 rotation;
@@ -107,6 +112,47 @@ private: // メンバ変数
 	uint32_t meterTextur_ = 0;
 	Sprite* meterSprite_ = nullptr;
 	float meter;
+	Vector2 size;
+
+	uint32_t meterFlameTexture_ = 0;
+	Sprite* meterFlameSprite_ = nullptr;
+
+	uint32_t titleTextTexture_ = 0;
+	Sprite* titleTextSprite_ = nullptr;
+
+	uint32_t titleBackTexture_ = 0;
+	Sprite* titleBackSprite_ = nullptr;
+
+	uint32_t pressSpaceTexture_ = 0;
+	Sprite* pressSpaceSprite_ = nullptr;
+	int spaceKeyBlinking_;
+	bool isSpaceKeyBlinking_;
+
+	bool isStageUpdate_;
+
+	uint32_t stage1Texture_ = 0;
+	Sprite* stage1Sprite_ = nullptr;
+	uint32_t stage1SelectTexture_ = 0;
+	Sprite* stage1SelectSprite_ = nullptr;
+	bool isSelectStage1=true;
+	bool isStage1Clear_=false;
+	bool isStagePushSpace_ = false;
+
+	uint32_t stage2Texture_ = 0;
+	Sprite* stage2Sprite_ = nullptr;
+	uint32_t stage2SelectTexture_ = 0;
+	Sprite* stage2SelectSprite_ = nullptr;
+	Vector4 stage2Color_ = {0.5,0.5,0.5,1};
+
+	uint32_t explanationTexture_ = 0;
+	Sprite* explanationSprite_ = nullptr;
+
+	uint32_t gameOverTexture_ = 0;
+	Sprite* gameOverSprite_ = nullptr;
+
+	uint32_t gameClearTexture_ = 0;
+	Sprite* gameClearSprite_ = nullptr;
+	bool isGameClear_;
 
 	// 障害物3Dモデル
 	Model* obstacleModel_ = nullptr;

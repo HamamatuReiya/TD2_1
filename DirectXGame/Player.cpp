@@ -2,10 +2,9 @@
 #include "MyMath.h"
 #include <cassert>
 
-void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosition) {
+void Player::Initialize(Model* model, Vector3 playerPosition) {
 	assert(model);
 	model_ = model;
-	textureHandle_ = textureHandle;
 	isDead_ = false;
 	worldTransform_.Initialize();
 	input_ = Input::GetInstance();
@@ -25,7 +24,7 @@ void Player::Update() {
 }
 
 void Player::Draw(ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 Vector3 Player::GetWorldPosition() {

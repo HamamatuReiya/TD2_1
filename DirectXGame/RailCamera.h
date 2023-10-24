@@ -10,6 +10,7 @@ public:
 	ViewProjection& GetViewProjection() { return viewProjection_; }
 	WorldTransform& GetWorldTransform() { return worldTransform_; };
 	void  SetisMeter(bool isMeter) {isMeter_ = isMeter; }
+	Vector3 GetWorldPosition();
 
 private:
 	WorldTransform worldTransform_;

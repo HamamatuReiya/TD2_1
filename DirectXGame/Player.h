@@ -9,7 +9,7 @@
 class Player {
 public:
 	//~Player();
-	void Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosition);
+	void Initialize(Model* model, Vector3 playerPosition);
 	void Update();
 	void Draw(ViewProjection& viewProjection);
 	void SetParent(const WorldTransform* parent);
@@ -21,7 +21,6 @@ private:
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 	Model* model_ = nullptr;
-	uint32_t textureHandle_ = 0u;
 	Player* player_ = nullptr;
 	Input* input_ = nullptr;
 	bool isDead_ = false;

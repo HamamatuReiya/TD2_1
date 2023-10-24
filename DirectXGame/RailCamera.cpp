@@ -69,8 +69,16 @@ void RailCamera::Update() {
 	worldTransform_.UpdateMatrix();
 	viewProjection_.matView = Inverse(worldTransform_.matWorld_);
 
-	ImGui::Begin("Camera");
+	/*ImGui::Begin("Camera");
 	ImGui::SliderFloat3("translate", &worldTransform_.translation_.x, -300.0f, 300.0f);
 	ImGui::SliderFloat3("rotate", &worldTransform_.rotation_.x, -10.0f, 10.0f);
-	ImGui::End();
+	ImGui::End();*/
+}
+
+Vector3 RailCamera::GetWorldPosition() {
+	Vector3 worldPos;
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	return worldPos;
 }
