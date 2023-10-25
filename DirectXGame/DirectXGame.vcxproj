@@ -114,6 +114,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Obstacle2.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RailCamera.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="MyMath.h" />
     <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Obstacle2.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RailCamera.h" />
     <ClInclude Include="resource.h" />

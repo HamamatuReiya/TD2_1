@@ -5,11 +5,9 @@
 #include "WorldTransform.h"
 #include <Sprite.h>
 #include <list>
-
-class Obstacle {
+class Obstacle2 {
 
 public:
-	
 	void Initialize(Model* model, uint32_t obstacle);
 	void Draw(ViewProjection& viewProjection);
 	void OnCollision();
@@ -18,10 +16,10 @@ public:
 private:
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
-	//モデル
+	// モデル
 	Model* model_ = nullptr;
-	//テクスチャハンドル
+	// テクスチャハンドル
 	uint32_t building_ = 0u;
-	Obstacle* obstacle_ = nullptr;
+	Obstacle2* obstacle2_ = nullptr;
 	bool isDead_ = false;
 };
