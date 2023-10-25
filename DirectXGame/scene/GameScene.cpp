@@ -20,9 +20,6 @@ GameScene::~GameScene() {
 	delete titleBackSprite_;
 	delete pressSpaceSprite_;
 	delete stage1Sprite_;
-	delete stage1SelectSprite_;
-	delete stage2Sprite_;
-	delete stage2SelectSprite_;
 	delete explanationSprite_;
 	delete gameOverSprite_;
 	delete gameClearSprite_;
@@ -30,7 +27,6 @@ GameScene::~GameScene() {
 		delete obstacle;
 	}*/
 	delete goal_;
-	delete goal2_;
 }
 
 void GameScene::Initialize() {
@@ -55,18 +51,6 @@ void GameScene::Initialize() {
 
 	stage1Texture_ = TextureManager::Load("STAGE1.png");
 	stage1Sprite_ = Sprite::Create(stage1Texture_, {0, 0});
-
-	stage1SelectTexture_ = TextureManager::Load("STAGE1SELECT.png");
-	stage1SelectSprite_ = Sprite::Create(stage1SelectTexture_, {0, 0});
-
-	stage2Texture_ = TextureManager::Load("STAGE2.png");
-	stage2Sprite_ = Sprite::Create(stage2Texture_, {0, 0});
-	stage2SelectTexture_ = TextureManager::Load("STAGE2SELECT.png");
-	stage2SelectSprite_ = Sprite::Create(stage2SelectTexture_, {0, 0});
-	if (isStage1Clear_ == true) {
-		stage2Color_ = {1, 1, 1, 1};
-	}
-	stage2Sprite_->SetColor(stage2Color_);
 
 	/////////////////
 
@@ -190,9 +174,6 @@ void GameScene::Initialize() {
 	goalModel_ = Model::CreateFromOBJ("Goal", true);
 	goal_->Initialize(goalModel_, goalPos_);
 
-	goal2_ = new Goal();
-	goal2_->Initialize(goalModel_, goal2Pos_);
-
 	pushSoundHandle_ = audio_->LoadWave("push.wav");
 
 	////////////////
@@ -236,21 +217,11 @@ void GameScene::Update() {
 				}
 			}
 			if (input_->TriggerKey(DIK_SPACE)) {
-				//ステージの選択
-				if (isSelectStage1 == true) {
 					LoadItemStage1PopData();
 					scene = Stage1;
 					spaceKeyBlinking_ = 0;
 					isSpaceKeyBlinking_ = true;
 					audio_->PlayWave(pushSoundHandle_);
-				}
-				if (isSelectStage1 == false) {
-					LoadItemStage2PopData();
-					scene = Stage2;
-					spaceKeyBlinking_ = 0;
-					isSpaceKeyBlinking_ = true;
-					audio_->PlayWave(pushSoundHandle_);
-				}
 			}
 			break;
 		}
@@ -334,93 +305,13 @@ void GameScene::Update() {
 			}
 		
 		break;
-		///////////ステージ2////////////
-	case Stage2:
-		if (isGameClear_ == false) {
-
-			    if (input_->TriggerKey(DIK_SPACE)) {
-				if (isStagePushSpace_ == false) {
-					audio_->PlayWave(pushSoundHandle_);
-				}
-				isStagePushSpace_ = true;
-			    }
-			    if (isStagePushSpace_ == true) {
-				railCamera_->Update();
-				player_->Update();
-				if (input_->PushKey(DIK_SPACE) && meter < 0.0f) {
-					meter += 2.0f;
-				}
-				isPlayerPosY_ = true;
-			    }
-		}
-
-		if (isGameClear_ == true) {
-			    if (input_->TriggerKey(DIK_SPACE)) {
-				scene = Title;
-				audio_->PlayWave(pushSoundHandle_);
-				Initialize();
-			    }
-		}
-		ground_->Update();
-		skydome_->Update();
-		goal2_->Update();
-		debugCamera_->Update();
-		checkAllCollisions();
-		UpdateItemPopCommands();
-		for (Item* item : items_) {
-			item->Update();
-		}
-		items_.remove_if([](Item* item) {
-			if (item->IsDead()) {
-				delete item;
-				return true;
-			}
-			return false;
-		});
-
-		size = meterSprite_->GetSize();
-		size.y = meter;
 		
-		meterSprite_->SetSize(size);
-
-		if (meter <= -500) {
-			meter = -500;
-		}
-
-		if (meter < 0) {
-			railCamera_->SetisMeter(true);
-		} else {
-			railCamera_->SetisMeter(false);
-		}
-
-#ifdef _DEBUG
-		if (input_->TriggerKey(DIK_RETURN)) {
-			isDebugCameraActive_ = true;
-		} else if (input_->TriggerKey(DIK_BACKSPACE)) {
-			isDebugCameraActive_ = false;
-		}
-#endif
-		if (isDebugCameraActive_) {
-			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-			viewProjection_.TransferMatrix();
-		} else {
-			viewProjection_.matView = railCamera_->GetViewProjection().matView;
-			viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
-			viewProjection_.TransferMatrix();
-		}
-		break;
-
 		case GameOver:
-		
-		if (input_->TriggerKey(DIK_SPACE)) {
-			scene = Title;
-			audio_->PlayWave(pushSoundHandle_);
-			Initialize();
-
+		if (input_->PushKey(DIK_SPACE)) {
+			    scene = Title;
+			    Initialize();
 		}
-		break;
-	    
+			break;
 	}
 
 }
@@ -451,12 +342,6 @@ void GameScene::Draw() {
 
 			case Select:
 			stage1Sprite_->Draw();
-			stage2Sprite_->Draw();
-			if (isSelectStage1 == true) {
-				stage1SelectSprite_->Draw();
-			} else {
-				stage2SelectSprite_->Draw();
-			}
 			break;
 		}
 		break;
@@ -512,38 +397,6 @@ void GameScene::Draw() {
 		}
 		goal_->Draw(viewProjection_);
 		break;
-	case Stage2:
-		player_->Draw(viewProjection_);
-		skydome_->Draw(viewProjection_);
-		ground_->Draw(viewProjection_);
-		obstacle_->Draw(viewProjection_);
-		obstacle2_->Draw(viewProjection_);
-		obstacle3_->Draw(viewProjection_);
-		obstacle4_->Draw(viewProjection_);
-		obstacle5_->Draw(viewProjection_);
-		obstacle6_->Draw(viewProjection_);
-		obstacle7_->Draw(viewProjection_);
-		obstacle8_->Draw(viewProjection_);
-		obstacle9_->Draw(viewProjection_);
-		obstacle10_->Draw(viewProjection_);
-		obstacle11_->Draw(viewProjection_);
-		obstacle12_->Draw(viewProjection_);
-		obstacle13_->Draw(viewProjection_);
-		breezeway_->Draw(viewProjection_);
-		breezeway2_->Draw(viewProjection_);
-		breezeway3_->Draw(viewProjection_);
-		breezeway4_->Draw(viewProjection_);
-		breezeway5_->Draw(viewProjection_);
-		breezeway6_->Draw(viewProjection_);
-
-		/*for (Obstacle* obstacle : obstacles_) {
-			
-		}*/
-		for (Item* item : items_) {
-			item->Draw(viewProjection_);
-		}
-		goal2_->Draw(viewProjection_);
-		break;
 	case GameOver:
 		
 		break;
@@ -571,16 +424,7 @@ void GameScene::Draw() {
 			gameClearSprite_->Draw();
 		}
 		break;
-	case Stage2:
-		meterFlameSprite_->Draw();
-		meterSprite_->Draw();
-		if (isStagePushSpace_ == false) {
-			explanationSprite_->Draw();
-		}
-		if (isGameClear_ == true) {
-			gameClearSprite_->Draw();
-		}
-		break;
+	
 	case GameOver:
 		gameOverSprite_->Draw();
 		break;
@@ -675,17 +519,6 @@ void GameScene::LoadItemStage1PopData() {
 	assert(file.is_open());
 	itemPopCommands << file.rdbuf();
 	file.close();
-}
-
-void GameScene::LoadItemStage2PopData() {
-	itemPopCommands.clear();
-	
-	std::ifstream file;
-	file.open("Resources/stage2ItemPop.csv");
-	assert(file.is_open());
-	itemPopCommands << file.rdbuf();
-	file.close();
-
 }
 
 void GameScene::UpdateItemPopCommands() {

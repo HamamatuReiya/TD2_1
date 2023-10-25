@@ -73,8 +73,6 @@ public: // メンバ関数
 
 	void LoadItemStage1PopData();
 
-	void LoadItemStage2PopData();
-
 	void UpdateItemPopCommands();
 
 private: // メンバ変数
@@ -82,7 +80,6 @@ private: // メンバ変数
 	enum Scene {
 		Title,
 		Stage1,
-		Stage2,
 		GameOver,
 	};
 
@@ -157,17 +154,9 @@ private: // メンバ変数
 
 	uint32_t stage1Texture_ = 0;
 	Sprite* stage1Sprite_ = nullptr;
-	uint32_t stage1SelectTexture_ = 0;
-	Sprite* stage1SelectSprite_ = nullptr;
 	bool isSelectStage1=true;
 	bool isStage1Clear_=false;
 	bool isStagePushSpace_ = false;
-
-	uint32_t stage2Texture_ = 0;
-	Sprite* stage2Sprite_ = nullptr;
-	uint32_t stage2SelectTexture_ = 0;
-	Sprite* stage2SelectSprite_ = nullptr;
-	Vector4 stage2Color_ = {0.5,0.5,0.5,1};
 
 	uint32_t explanationTexture_ = 0;
 	Sprite* explanationSprite_ = nullptr;
@@ -182,9 +171,6 @@ private: // メンバ変数
 	Goal* goal_ = nullptr;
 	Model* goalModel_ = nullptr;
 	Vector3 goalPos_ = {0, 50, 400};
-
-	Goal* goal2_ = nullptr;
-	Vector3 goal2Pos_ = {0, 50, 800};
 
 	// 障害物3Dモデル
 	Model* obstacleModel_ = nullptr;
