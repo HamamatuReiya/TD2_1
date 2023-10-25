@@ -10,9 +10,9 @@ class Obstacle {
 
 public:
 	
-	void Initialize(Model* model, uint32_t obstacle/*, Vector3& obstaclePosition*/);
+	void Initialize(Model* model, uint32_t obstacle);
 	void Draw(ViewProjection& viewProjection);
-	/*void OnCollision();*/
+	void OnCollision();
 	Vector3 GetWorldPosition();
 
 private:
@@ -24,5 +24,4 @@ private:
 	uint32_t building_ = 0u;
 	Obstacle* obstacle_ = nullptr;
 	bool isDead_ = false;
-	/*Vector3 obstaclePosition_;*/
 };

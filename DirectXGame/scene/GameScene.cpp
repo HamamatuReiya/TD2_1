@@ -26,6 +26,9 @@ GameScene::~GameScene() {
 	delete explanationSprite_;
 	delete gameOverSprite_;
 	delete gameClearSprite_;
+	/*for (Obstacle* obstacle : obstacles_) {
+		delete obstacle;
+	}*/
 	delete goal_;
 	delete goal2_;
 }
@@ -86,15 +89,14 @@ void GameScene::Initialize() {
 	player_->Initialize(playerModel_, playerPosition);
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
-	/*obstacle_ = new Obstacle();
-	building_ = TextureManager::Load("black.png");
-	obstacleModel_ = Model::Create();
-	Vector3 obstaclePosition(0.0f, 10.0f, 50.0f);
-	obstacle_->Initialize(obstacleModel_, building_, obstaclePosition);*/
-	building_ = TextureManager::Load("black.png");
+	//障害物1
 	obstacle_ = new Obstacle();
+	building_ = TextureManager::Load("black.png");
 	obstacleModel_ = Model::Create();
 	obstacle_->Initialize(obstacleModel_, building_);
+	//障害物2
+	obstacle2_ = new Obstacle2();
+	obstacle2_->Initialize(obstacleModel_, building_);
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
@@ -126,6 +128,11 @@ void GameScene::Initialize() {
 	gameClearSprite_ = Sprite::Create(gameClearTexture_, {0, 0});
 	isGameClear_ = false;
 
+	//サウンド読み込み
+	bgmHandle_ = audio_->LoadWave("bgm.wav");
+
+	soundHandle_ = audio_->LoadWave("energy.wav");
+
 	goal_ = new Goal();
 	goalModel_ = Model::CreateFromOBJ("Goal", true);
 	goal_->Initialize(goalModel_, goalPos_);
@@ -138,6 +145,11 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() { 
+
+	if (isBgm_ == false) {
+		bgmLoop_ = audio_->PlayWave(bgmHandle_, true);
+		isBgm_ = true;
+	}
 
 	switch (scene) {
 	case Title:
@@ -403,6 +415,10 @@ void GameScene::Draw() {
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
 		obstacle_->Draw(viewProjection_);
+		obstacle2_->Draw(viewProjection_);
+		/*for (Obstacle* obstacle : obstacles_) {
+			
+		}*/
 		for (Item* item : items_) {
 			item->Draw(viewProjection_);
 		}
@@ -413,6 +429,10 @@ void GameScene::Draw() {
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
 		obstacle_->Draw(viewProjection_);
+		obstacle2_->Draw(viewProjection_);
+		/*for (Obstacle* obstacle : obstacles_) {
+			
+		}*/
 		for (Item* item : items_) {
 			item->Draw(viewProjection_);
 		}
@@ -488,7 +508,7 @@ void GameScene::checkAllCollisions() {
 		}
 	}
 
-	const float PLAYER_R = 1.5f;
+	const float PLAYER_R = 1.0f;
 	const float ITEM_R = 1.5f;
 	Vector3 posA, posB;
 	
@@ -500,11 +520,27 @@ void GameScene::checkAllCollisions() {
 		float R = (PLAYER_R + ITEM_R) * (PLAYER_R + ITEM_R);
 		if (P <= R) {
 			item->OnCollision();
+			audio_->PlayWave(soundHandle_);
 			meter -= 250;
 		}
 	}
-	
-
+	const float OBSTACLE_R = 5.0f;
+	posA = obstacle_->GetWorldPosition();
+	posB = player_->GetWorldPosition();
+	float A = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
+	          (posB.z - posA.z) * (posB.z - posA.z);
+	float B = (PLAYER_R + OBSTACLE_R) * (PLAYER_R + OBSTACLE_R);
+	if (A <= B) {
+		scene = GameOver;
+	}
+	posA = obstacle2_->GetWorldPosition();
+	posB = player_->GetWorldPosition();
+	float C = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
+	          (posB.z - posA.z) * (posB.z - posA.z);
+	float D = (PLAYER_R + OBSTACLE_R) * (PLAYER_R + OBSTACLE_R);
+	if (C <= D) {
+		scene = GameOver;
+	}
 }
 
 void GameScene::ItemDelete() { 

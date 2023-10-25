@@ -15,6 +15,7 @@
 #include "Item.h"
 #include "Ground.h"
 #include "Obstacle.h"
+#include "Obstacle2.h"
 #include "Goal.h"
 #include <sstream>
 
@@ -107,6 +108,12 @@ private: // メンバ変数
 	std::list<Item*> items_;
 	std::stringstream itemPopCommands;
 
+	//障害物の複数化
+	/*Obstacle* obstacle_ = nullptr;
+	Model* obstacleModel_ = nullptr;
+	Vector3 obstaclePos_;
+	std::list<Obstacle*> obstacles_;*/
+
 	int standFlag = false;
 	int standTime = 0;
 
@@ -160,14 +167,22 @@ private: // メンバ変数
 	Vector3 goalPos_ = {0, 50, 400};
 
 	Goal* goal2_ = nullptr;
-	Vector3 goal2Pos_ = {0, 50, 600};
+	Vector3 goal2Pos_ = {0, 50, 800};
 
 	// 障害物3Dモデル
 	Model* obstacleModel_ = nullptr;
 	// 障害物
 	Obstacle* obstacle_ = nullptr;
+	Obstacle2* obstacle2_ = nullptr;
 	// 障害物テクスチャハンドル
 	uint32_t building_ = 0;
+
+	//サウンド
+	uint32_t bgmHandle_ = 0;
+	uint32_t bgmLoop_ = 0;
+	bool isBgm_ = false;
+
+	uint32_t soundHandle_ = 0;
 
 	/// <summary>
 	/// ゲームシーン用

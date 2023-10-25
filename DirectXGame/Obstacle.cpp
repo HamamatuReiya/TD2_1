@@ -2,20 +2,17 @@
 #include "MyMath.h"
 #include <cassert>
 
-void Obstacle::Initialize(Model* model, uint32_t obstacle/*, Vector3& obstaclePosition*/) {
-	/*assert(model);*/
+void Obstacle::Initialize(Model* model, uint32_t obstacle) {
 
 	model_ = model;
 	building_ = obstacle;
-	/*building_ = obstacle;
-	obstaclePosition_ = obstaclePosition;*/
 
 	worldTransform_.Initialize();
 
 
-	worldTransform_.scale_ = {6.0f, 9.0f, 3.0f};
+	worldTransform_.scale_ = {5.0f, 5.0f, 5.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
-	worldTransform_.translation_ = {15.0f, 9.0f,100.0f};
+	worldTransform_.translation_ = {0.0f, 5.0f,100.0f};
 
 	worldTransform_.UpdateMatrix();
 };
@@ -32,7 +29,7 @@ void Obstacle::Draw(ViewProjection& viewProjection){
 	model_->Draw(worldTransform_, viewProjection, building_);
 };
 
-//void Obstacle::OnCollision(){ 
-//	isDead_ = true; 
-//};
+void Obstacle::OnCollision(){ 
+	isDead_ = true; 
+};
 
