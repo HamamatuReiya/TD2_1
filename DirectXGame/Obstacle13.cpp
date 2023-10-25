@@ -1,8 +1,8 @@
-﻿#include "Obstacle2.h"
+﻿#include "Obstacle13.h"
 #include "MyMath.h"
 #include <cassert>
 
-void Obstacle2::Initialize(Model* model, uint32_t obstacle) {
+void Obstacle13::Initialize(Model* model, uint32_t obstacle) {
 
 	model_ = model;
 	building_ = obstacle;
@@ -11,12 +11,12 @@ void Obstacle2::Initialize(Model* model, uint32_t obstacle) {
 
 	worldTransform_.scale_ = {10.0f, 10.0f, 10.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
-	worldTransform_.translation_ = {19.0f,10.0f, 170.0f};
+	worldTransform_.translation_ = {-19.0f, 30.0f, 290.0f};
 
 	worldTransform_.UpdateMatrix();
 };
 
-Vector3 Obstacle2::GetWorldPosition() {
+Vector3 Obstacle13::GetWorldPosition() {
 	Vector3 worldPos;
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
@@ -24,8 +24,8 @@ Vector3 Obstacle2::GetWorldPosition() {
 	return worldPos;
 }
 
-void Obstacle2::Draw(ViewProjection& viewProjection) {
+void Obstacle13::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection, building_);
 };
 
-void Obstacle2::OnCollision() { isDead_ = true; };
+void Obstacle13::OnCollision() { isDead_ = true; };
