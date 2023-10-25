@@ -56,9 +56,9 @@ public: // メンバ関数
 
 	void LoadItemStage1PopData();
 
-	void UpdateItemPopCommands();
+	void LoadItemStage2PopData();
 
-	void ItemDelete();
+	void UpdateItemPopCommands();
 
 private: // メンバ変数
 

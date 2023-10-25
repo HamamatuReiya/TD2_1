@@ -188,6 +188,7 @@ void GameScene::Update() {
 					isSpaceKeyBlinking_ = true;
 				}
 				if (isSelectStage1 == false) {
+					LoadItemStage2PopData();
 					scene = Stage2;
 					spaceKeyBlinking_ = 0;
 					isSpaceKeyBlinking_ = true;
@@ -294,6 +295,8 @@ void GameScene::Update() {
 				Initialize();
 			    }
 		}
+		ground_->Update();
+		skydome_->Update();
 		goal2_->Update();
 		debugCamera_->Update();
 		checkAllCollisions();
@@ -347,6 +350,7 @@ void GameScene::Update() {
 		if (input_->TriggerKey(DIK_SPACE)) {
 			scene = Title;
 			Initialize();
+
 		}
 		break;
 	    
@@ -543,11 +547,6 @@ void GameScene::checkAllCollisions() {
 	}
 }
 
-void GameScene::ItemDelete() { 
-	/*for (Item* item : items_) {
-		delete item;
-	}*/
-}
 
 void GameScene::AddItem(Vector3 position) { 
 	Item* item = new Item(); 
@@ -557,11 +556,24 @@ void GameScene::AddItem(Vector3 position) {
 }
 
 void GameScene::LoadItemStage1PopData() { 
+	itemPopCommands.clear();
+	
 	std::ifstream file; 
     file.open("Resources/stage1ItemPop.csv");
 	assert(file.is_open());
 	itemPopCommands << file.rdbuf();
 	file.close();
+}
+
+void GameScene::LoadItemStage2PopData() {
+	itemPopCommands.clear();
+	
+	std::ifstream file;
+	file.open("Resources/stage2ItemPop.csv");
+	assert(file.is_open());
+	itemPopCommands << file.rdbuf();
+	file.close();
+
 }
 
 void GameScene::UpdateItemPopCommands() {

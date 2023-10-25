@@ -8,7 +8,13 @@ void Skydome::Initialize(Model* model) {
 	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
 }
 
-void Skydome::Update() {}
+void Skydome::Update() {
+	const float kSpeed = 0.15f;
+	Vector3 move = {0.0f, 0.0f, kSpeed};
+
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	worldTransform_.UpdateMatrix();
+}
 
 void Skydome::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection);
