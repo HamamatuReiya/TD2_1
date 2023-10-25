@@ -97,6 +97,59 @@ void GameScene::Initialize() {
 	//障害物2
 	obstacle2_ = new Obstacle2();
 	obstacle2_->Initialize(obstacleModel_, building_);
+	//障害物3
+	obstacle3_ = new Obstacle3();
+	obstacle3_->Initialize(obstacleModel_, building_);
+	//障害物4
+	obstacle4_ = new Obstacle4();
+	obstacle4_->Initialize(obstacleModel_, building_);
+	// 障害物5
+	obstacle5_ = new Obstacle5();
+	obstacle5_->Initialize(obstacleModel_, building_);
+	//障害物6
+	obstacle6_ = new Obstacle6();
+	obstacle6_->Initialize(obstacleModel_, building_);
+	// 障害物7
+	obstacle7_ = new Obstacle7();
+	obstacle7_->Initialize(obstacleModel_, building_);
+	// 障害物8
+	obstacle8_ = new Obstacle8();
+	obstacle8_->Initialize(obstacleModel_, building_);
+	// 障害物9
+	obstacle9_ = new Obstacle9();
+	obstacle9_->Initialize(obstacleModel_, building_);
+	// 障害物10
+	obstacle10_ = new Obstacle10();
+	obstacle10_->Initialize(obstacleModel_, building_);
+	// 障害物11
+	obstacle11_ = new Obstacle11();
+	obstacle11_->Initialize(obstacleModel_, building_);
+	// 障害物11
+	obstacle12_ = new Obstacle12();
+	obstacle12_->Initialize(obstacleModel_, building_);
+	// 障害物11
+	obstacle13_ = new Obstacle13();
+	obstacle13_->Initialize(obstacleModel_, building_);
+	//渡り廊下1リソース
+	breezeway_ = new Breezeway();
+	building2_ = TextureManager::Load("breezeway.png");
+	breezewayModel_ = Model::Create();
+	breezeway_->Initialize(breezewayModel_, building2_);
+	//渡り廊下2
+	breezeway2_ = new Breezeway2();
+	breezeway2_->Initialize(breezewayModel_, building2_);
+	//渡り廊下3
+	breezeway3_ = new Breezeway3();
+	breezeway3_->Initialize(breezewayModel_, building2_);
+	// 渡り廊下4
+	breezeway4_ = new Breezeway4();
+	breezeway4_->Initialize(breezewayModel_, building2_);
+	// 渡り廊下5
+	breezeway5_ = new Breezeway5();
+	breezeway5_->Initialize(breezewayModel_, building2_);
+	// 渡り廊下6
+	breezeway6_ = new Breezeway6();
+	breezeway6_->Initialize(breezewayModel_, building2_);
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
@@ -140,6 +193,8 @@ void GameScene::Initialize() {
 	goal2_ = new Goal();
 	goal2_->Initialize(goalModel_, goal2Pos_);
 
+	pushSoundHandle_ = audio_->LoadWave("push.wav");
+
 	////////////////
 
 }
@@ -168,6 +223,7 @@ void GameScene::Update() {
 			// SPACEを押してシーンの切り替え
 			if (input_->TriggerKey(DIK_SPACE)) {
 				titleScene = Select;
+				audio_->PlayWave(pushSoundHandle_);
 			}
 			break;
 
@@ -186,12 +242,14 @@ void GameScene::Update() {
 					scene = Stage1;
 					spaceKeyBlinking_ = 0;
 					isSpaceKeyBlinking_ = true;
+					audio_->PlayWave(pushSoundHandle_);
 				}
 				if (isSelectStage1 == false) {
 					LoadItemStage2PopData();
 					scene = Stage2;
 					spaceKeyBlinking_ = 0;
 					isSpaceKeyBlinking_ = true;
+					audio_->PlayWave(pushSoundHandle_);
 				}
 			}
 			break;
@@ -203,6 +261,9 @@ void GameScene::Update() {
 		if (isGameClear_ == false) {
 
 			if (input_->TriggerKey(DIK_SPACE)) {
+				if (isStagePushSpace_ == false) {
+					audio_->PlayWave(pushSoundHandle_);
+				}
 				isStagePushSpace_ = true;
 			}
 			if (isStagePushSpace_ == true) {
@@ -218,6 +279,7 @@ void GameScene::Update() {
 		if (isGameClear_ == true) {
 			if (input_->TriggerKey(DIK_SPACE)) {
 				scene = Title;
+				audio_->PlayWave(pushSoundHandle_);
 				Initialize();
 			}
 		}
@@ -277,6 +339,9 @@ void GameScene::Update() {
 		if (isGameClear_ == false) {
 
 			    if (input_->TriggerKey(DIK_SPACE)) {
+				if (isStagePushSpace_ == false) {
+					audio_->PlayWave(pushSoundHandle_);
+				}
 				isStagePushSpace_ = true;
 			    }
 			    if (isStagePushSpace_ == true) {
@@ -292,6 +357,7 @@ void GameScene::Update() {
 		if (isGameClear_ == true) {
 			    if (input_->TriggerKey(DIK_SPACE)) {
 				scene = Title;
+				audio_->PlayWave(pushSoundHandle_);
 				Initialize();
 			    }
 		}
@@ -349,6 +415,7 @@ void GameScene::Update() {
 		
 		if (input_->TriggerKey(DIK_SPACE)) {
 			scene = Title;
+			audio_->PlayWave(pushSoundHandle_);
 			Initialize();
 
 		}
@@ -420,6 +487,23 @@ void GameScene::Draw() {
 		ground_->Draw(viewProjection_);
 		obstacle_->Draw(viewProjection_);
 		obstacle2_->Draw(viewProjection_);
+		obstacle3_->Draw(viewProjection_);
+		obstacle4_->Draw(viewProjection_);
+		obstacle5_->Draw(viewProjection_);
+		obstacle6_->Draw(viewProjection_);
+		obstacle7_->Draw(viewProjection_);
+		obstacle8_->Draw(viewProjection_);
+		obstacle9_->Draw(viewProjection_);
+		obstacle10_->Draw(viewProjection_);
+		obstacle11_->Draw(viewProjection_);
+		obstacle12_->Draw(viewProjection_);
+		obstacle13_->Draw(viewProjection_);
+		breezeway_->Draw(viewProjection_);
+		breezeway2_->Draw(viewProjection_);
+		breezeway3_->Draw(viewProjection_);
+		breezeway4_->Draw(viewProjection_);
+		breezeway5_->Draw(viewProjection_);
+		breezeway6_->Draw(viewProjection_);
 		/*for (Obstacle* obstacle : obstacles_) {
 			
 		}*/
@@ -434,6 +518,24 @@ void GameScene::Draw() {
 		ground_->Draw(viewProjection_);
 		obstacle_->Draw(viewProjection_);
 		obstacle2_->Draw(viewProjection_);
+		obstacle3_->Draw(viewProjection_);
+		obstacle4_->Draw(viewProjection_);
+		obstacle5_->Draw(viewProjection_);
+		obstacle6_->Draw(viewProjection_);
+		obstacle7_->Draw(viewProjection_);
+		obstacle8_->Draw(viewProjection_);
+		obstacle9_->Draw(viewProjection_);
+		obstacle10_->Draw(viewProjection_);
+		obstacle11_->Draw(viewProjection_);
+		obstacle12_->Draw(viewProjection_);
+		obstacle13_->Draw(viewProjection_);
+		breezeway_->Draw(viewProjection_);
+		breezeway2_->Draw(viewProjection_);
+		breezeway3_->Draw(viewProjection_);
+		breezeway4_->Draw(viewProjection_);
+		breezeway5_->Draw(viewProjection_);
+		breezeway6_->Draw(viewProjection_);
+
 		/*for (Obstacle* obstacle : obstacles_) {
 			
 		}*/
@@ -528,7 +630,8 @@ void GameScene::checkAllCollisions() {
 			meter -= 250;
 		}
 	}
-	const float OBSTACLE_R = 5.0f;
+	//ここから障害物の当たり判定
+	const float OBSTACLE_R = 9.0f;
 	posA = obstacle_->GetWorldPosition();
 	posB = player_->GetWorldPosition();
 	float A = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
@@ -537,12 +640,21 @@ void GameScene::checkAllCollisions() {
 	if (A <= B) {
 		scene = GameOver;
 	}
-	posA = obstacle2_->GetWorldPosition();
+	const float BREEZEWAY_R = 2.5f;
+	posA = breezeway_->GetWorldPosition();
 	posB = player_->GetWorldPosition();
 	float C = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
 	          (posB.z - posA.z) * (posB.z - posA.z);
-	float D = (PLAYER_R + OBSTACLE_R) * (PLAYER_R + OBSTACLE_R);
+	float D = (PLAYER_R + BREEZEWAY_R) * (PLAYER_R + BREEZEWAY_R);
 	if (C <= D) {
+		scene = GameOver;
+	}
+	posA = breezeway4_->GetWorldPosition();
+	posB = player_->GetWorldPosition();
+	float E = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
+	          (posB.z - posA.z) * (posB.z - posA.z);
+	float F = (PLAYER_R + BREEZEWAY_R) * (PLAYER_R + BREEZEWAY_R);
+	if (E <= F) {
 		scene = GameOver;
 	}
 }
