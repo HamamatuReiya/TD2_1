@@ -176,6 +176,8 @@ private: // メンバ変数
 
 	uint32_t soundHandle_ = 0;
 
+	uint32_t pushSoundHandle_ = 0;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

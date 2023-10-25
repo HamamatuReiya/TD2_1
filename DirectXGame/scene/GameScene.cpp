@@ -131,6 +131,8 @@ void GameScene::Initialize() {
 
 	soundHandle_ = audio_->LoadWave("energy.wav");
 
+	pushSoundHandle_ = audio_->LoadWave("push.wav");
+
 	////////////////
 
 }
@@ -159,6 +161,7 @@ void GameScene::Update() {
 			// SPACEを押してシーンの切り替え
 			if (input_->TriggerKey(DIK_SPACE)) {
 				titleScene = Select;
+				audio_->PlayWave(pushSoundHandle_);
 			}
 			break;
 
@@ -177,11 +180,13 @@ void GameScene::Update() {
 					scene = Stage1;
 					spaceKeyBlinking_ = 0;
 					isSpaceKeyBlinking_ = true;
+					audio_->PlayWave(pushSoundHandle_);
 				}
 				if (isSelectStage1 == false) {
 					scene = Stage2;
 					spaceKeyBlinking_ = 0;
 					isSpaceKeyBlinking_ = true;
+					audio_->PlayWave(pushSoundHandle_);
 				}
 			}
 			break;
@@ -193,6 +198,9 @@ void GameScene::Update() {
 		if (isGameClear_ == false) {
 
 			if (input_->TriggerKey(DIK_SPACE)) {
+				if (isStagePushSpace_ == false) {
+					audio_->PlayWave(pushSoundHandle_);
+				}
 				isStagePushSpace_ = true;
 			}
 			if (isStagePushSpace_ == true) {
@@ -208,6 +216,7 @@ void GameScene::Update() {
 		if (isGameClear_ == true) {
 			if (input_->TriggerKey(DIK_SPACE)) {
 				scene = Title;
+				audio_->PlayWave(pushSoundHandle_);
 				Initialize();
 			}
 		}
@@ -266,6 +275,9 @@ void GameScene::Update() {
 		if (isGameClear_ == false) {
 
 			    if (input_->TriggerKey(DIK_SPACE)) {
+				if (isStagePushSpace_ == false) {
+					audio_->PlayWave(pushSoundHandle_);
+				}
 				isStagePushSpace_ = true;
 			    }
 			    if (isStagePushSpace_ == true) {
@@ -281,6 +293,7 @@ void GameScene::Update() {
 		if (isGameClear_ == true) {
 			    if (input_->TriggerKey(DIK_SPACE)) {
 				scene = Title;
+				audio_->PlayWave(pushSoundHandle_);
 				Initialize();
 			    }
 		}
@@ -335,6 +348,7 @@ void GameScene::Update() {
 		
 		if (input_->TriggerKey(DIK_SPACE)) {
 			scene = Title;
+			audio_->PlayWave(pushSoundHandle_);
 			Initialize();
 		}
 		break;
