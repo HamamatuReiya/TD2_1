@@ -83,15 +83,14 @@ void GameScene::Initialize() {
 	player_->Initialize(playerModel_, playerPosition);
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
-	/*obstacle_ = new Obstacle();
-	building_ = TextureManager::Load("black.png");
-	obstacleModel_ = Model::Create();
-	Vector3 obstaclePosition(0.0f, 10.0f, 50.0f);
-	obstacle_->Initialize(obstacleModel_, building_, obstaclePosition);*/
-	building_ = TextureManager::Load("black.png");
+	//障害物1
 	obstacle_ = new Obstacle();
+	building_ = TextureManager::Load("black.png");
 	obstacleModel_ = Model::Create();
 	obstacle_->Initialize(obstacleModel_, building_);
+	//障害物2
+	obstacle2_ = new Obstacle2();
+	obstacle2_->Initialize(obstacleModel_, building_);
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
@@ -386,6 +385,13 @@ void GameScene::Draw() {
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
 		obstacle_->Draw(viewProjection_);
+		obstacle2_->Draw(viewProjection_);
+		/*for (Obstacle* obstacle : obstacles_) {
+			
+		}*/
+		for (Item* item : items_) {
+			item->Draw(viewProjection_);
+		}
 		goal_->Draw(viewProjection_);
 		item_->Draw(viewProjection_);
 		break;
@@ -394,6 +400,13 @@ void GameScene::Draw() {
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
 		obstacle_->Draw(viewProjection_);
+		obstacle2_->Draw(viewProjection_);
+		/*for (Obstacle* obstacle : obstacles_) {
+			
+		}*/
+		for (Item* item : items_) {
+			item->Draw(viewProjection_);
+		}
 		goal2_->Draw(viewProjection_);
 		break;
 	case GameOver:
@@ -466,7 +479,7 @@ void GameScene::checkAllCollisions() {
 		}
 	}
 
-	const float PLAYER_R = 1.5f;
+	const float PLAYER_R = 1.0f;
 	const float ITEM_R = 1.5f;
 		posA = item_->GetWorldPosition();
 		posB = player_->GetWorldPosition();
@@ -477,6 +490,71 @@ void GameScene::checkAllCollisions() {
 			item_->OnCollision();
 			meter -= 250;
 		}
-	
+	}
+	const float OBSTACLE_R = 5.0f;
+	posA = obstacle_->GetWorldPosition();
+	posB = player_->GetWorldPosition();
+	float A = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
+	          (posB.z - posA.z) * (posB.z - posA.z);
+	float B = (PLAYER_R + OBSTACLE_R) * (PLAYER_R + OBSTACLE_R);
+	if (A <= B) {
+		scene = GameOver;
+	}
+	posA = obstacle2_->GetWorldPosition();
+	posB = player_->GetWorldPosition();
+	float C = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
+	          (posB.z - posA.z) * (posB.z - posA.z);
+	float D = (PLAYER_R + OBSTACLE_R) * (PLAYER_R + OBSTACLE_R);
+	if (C <= D) {
+		scene = GameOver;
+	}
+}
+
+void GameScene::ItemDelete() { 
+	/*for (Item* item : items_) {
+		delete item;
+	}*/
+}
+
+void GameScene::AddItem(Vector3 position) { 
+	Item* item = new Item(); 
+	item->Initialize(itemModel_, position);
+	item->SetGameScene(this);
+	items_.push_back(item);
+}
+
+void GameScene::LoadItemStage1PopData() { 
+	std::ifstream file; 
+    file.open("Resources/stage1ItemPop.csv");
+	assert(file.is_open());
+	itemPopCommands << file.rdbuf();
+	file.close();
+}
+
+void GameScene::UpdateItemPopCommands() {
+	if (standFlag) {
+		standTime--;
+		if (standTime <= 0) {
+			standFlag = false;
+		}
+		return;
+	}
+	std::string line;
+	while (getline(itemPopCommands, line)) {
+		std::istringstream line_stream(line);
+		std::string word;
+		getline(line_stream, word, ',');
+		if (word.find("//") == 0) {
+			continue;
+		}
+		if (word.find("POP") == 0) {
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
 
 }
