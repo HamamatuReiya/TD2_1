@@ -106,6 +106,12 @@ private: // メンバ変数
 	std::list<Item*> items_;
 	std::stringstream itemPopCommands;
 
+	//障害物の複数化
+	Obstacle* obstacle_ = nullptr;
+	Model* obstacleModel_ = nullptr;
+	Vector3 obstaclePos_;
+	std::list<Obstacle*> obstacles_;
+
 	int standFlag = false;
 	int standTime = 0;
 
@@ -155,9 +161,9 @@ private: // メンバ変数
 	bool isGameClear_;
 
 	// 障害物3Dモデル
-	Model* obstacleModel_ = nullptr;
+	/*Model* obstacleModel_ = nullptr;*/
 	// 障害物
-	Obstacle* obstacle_ = nullptr;
+	/*Obstacle* obstacle_ = nullptr;*/
 	// 障害物テクスチャハンドル
 	uint32_t building_ = 0;
 

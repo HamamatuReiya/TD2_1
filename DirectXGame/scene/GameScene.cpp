@@ -26,6 +26,9 @@ GameScene::~GameScene() {
 	delete explanationSprite_;
 	delete gameOverSprite_;
 	delete gameClearSprite_;
+	for (Obstacle* obstacle : obstacles_) {
+		delete obstacle;
+	}
 }
 
 void GameScene::Initialize() {
@@ -84,13 +87,8 @@ void GameScene::Initialize() {
 	player_->Initialize(playerModel_, playerPosition);
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
-	/*obstacle_ = new Obstacle();
-	building_ = TextureManager::Load("black.png");
-	obstacleModel_ = Model::Create();
-	Vector3 obstaclePosition(0.0f, 10.0f, 50.0f);
-	obstacle_->Initialize(obstacleModel_, building_, obstaclePosition);*/
-	building_ = TextureManager::Load("black.png");
 	obstacle_ = new Obstacle();
+	building_ = TextureManager::Load("black.png");
 	obstacleModel_ = Model::Create();
 	obstacle_->Initialize(obstacleModel_, building_);
 
@@ -391,7 +389,9 @@ void GameScene::Draw() {
 		player_->Draw(viewProjection_);
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
-		obstacle_->Draw(viewProjection_);
+		for (Obstacle* obstacle : obstacles_) {
+			obstacle->Draw(viewProjection_);
+		}
 		for (Item* item : items_) {
 			item->Draw(viewProjection_);
 		}
@@ -400,7 +400,9 @@ void GameScene::Draw() {
 		player_->Draw(viewProjection_);
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
-		obstacle_->Draw(viewProjection_);
+		for (Obstacle* obstacle : obstacles_) {
+			obstacle->Draw(viewProjection_);
+		}
 		for (Item* item : items_) {
 			item->Draw(viewProjection_);
 		}
