@@ -26,6 +26,8 @@ GameScene::~GameScene() {
 	delete explanationSprite_;
 	delete gameOverSprite_;
 	delete gameClearSprite_;
+	delete goal_;
+	delete goal2_;
 }
 
 void GameScene::Initialize() {
@@ -124,6 +126,13 @@ void GameScene::Initialize() {
 	gameClearSprite_ = Sprite::Create(gameClearTexture_, {0, 0});
 	isGameClear_ = false;
 
+	goal_ = new Goal();
+	goalModel_ = Model::CreateFromOBJ("Goal", true);
+	goal_->Initialize(goalModel_, goalPos_);
+
+	goal2_ = new Goal();
+	goal2_->Initialize(goalModel_, goal2Pos_);
+
 	////////////////
 
 }
@@ -200,6 +209,7 @@ void GameScene::Update() {
 			}
 		}
 
+		goal_->Update();
 		debugCamera_->Update();
 			checkAllCollisions();
 			UpdateItemPopCommands();
@@ -272,6 +282,7 @@ void GameScene::Update() {
 				Initialize();
 			    }
 		}
+		goal2_->Update();
 		debugCamera_->Update();
 		checkAllCollisions();
 		UpdateItemPopCommands();
@@ -395,6 +406,7 @@ void GameScene::Draw() {
 		for (Item* item : items_) {
 			item->Draw(viewProjection_);
 		}
+		goal_->Draw(viewProjection_);
 		break;
 	case Stage2:
 		player_->Draw(viewProjection_);
@@ -404,6 +416,7 @@ void GameScene::Draw() {
 		for (Item* item : items_) {
 			item->Draw(viewProjection_);
 		}
+		goal2_->Draw(viewProjection_);
 		break;
 	case GameOver:
 		
@@ -456,9 +469,17 @@ void GameScene::Draw() {
 void GameScene::checkAllCollisions() {
 	Vector3 playerPos;
 	playerPos = player_->GetWorldPosition();
-	if (playerPos.z > 400.0f) {
-		isGameClear_ = true;
-		isStage1Clear_ = true;
+	if (isSelectStage1 == true) {
+		if (playerPos.z > 400.0f) {
+			isGameClear_ = true;
+			isStage1Clear_ = true;
+		}
+	}
+
+	if (isSelectStage1 == false) {
+		if (playerPos.z > 800.0f) {
+			isGameClear_ = true;
+		}
 	}
 
 	if (isPlayerPosY_ == true) {

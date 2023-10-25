@@ -15,6 +15,7 @@
 #include "Item.h"
 #include "Ground.h"
 #include "Obstacle.h"
+#include "Goal.h"
 #include <sstream>
 
 /// <summary>
@@ -153,6 +154,13 @@ private: // メンバ変数
 	uint32_t gameClearTexture_ = 0;
 	Sprite* gameClearSprite_ = nullptr;
 	bool isGameClear_;
+
+	Goal* goal_ = nullptr;
+	Model* goalModel_ = nullptr;
+	Vector3 goalPos_ = {0, 50, 400};
+
+	Goal* goal2_ = nullptr;
+	Vector3 goal2Pos_ = {0, 50, 600};
 
 	// 障害物3Dモデル
 	Model* obstacleModel_ = nullptr;
