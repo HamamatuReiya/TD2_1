@@ -11,9 +11,6 @@ GameScene::~GameScene() {
 	delete debugCamera_;
     delete skydome_;
 	delete item_;
-	for (Item* item : items_) {
-		delete item;
-	}
 	delete meterSprite_;
 	delete meterFlameSprite_;
 	delete titleTextSprite_;
@@ -26,6 +23,8 @@ GameScene::~GameScene() {
 	delete explanationSprite_;
 	delete gameOverSprite_;
 	delete gameClearSprite_;
+	delete goal_;
+	delete goal2_;
 }
 
 void GameScene::Initialize() {
@@ -124,6 +123,18 @@ void GameScene::Initialize() {
 	gameClearSprite_ = Sprite::Create(gameClearTexture_, {0, 0});
 	isGameClear_ = false;
 
+	goal_ = new Goal();
+	goalModel_ = Model::CreateFromOBJ("Goal", true);
+	goal_->Initialize(goalModel_,goalPos_);
+
+	goal2_ = new Goal();
+	goalModel2_ = Model::CreateFromOBJ("Goal", true);
+	goal2_->Initialize(goalModel2_, goalPos2_);
+
+	itemPos_ = {0, 30, 100};
+	item_->Initialize(itemModel_,itemPos_);
+
+
 	////////////////
 
 }
@@ -161,7 +172,6 @@ void GameScene::Update() {
 			if (input_->TriggerKey(DIK_SPACE)) {
 				//ステージの選択
 				if (isSelectStage1 == true) {
-					LoadItemStage1PopData();
 					scene = Stage1;
 					spaceKeyBlinking_ = 0;
 					isSpaceKeyBlinking_ = true;
@@ -200,19 +210,11 @@ void GameScene::Update() {
 			}
 		}
 
+		goal_->Update();
 		debugCamera_->Update();
 			checkAllCollisions();
-			UpdateItemPopCommands();
-			for (Item* item : items_) {
-				item->Update();
-			}
-			items_.remove_if([](Item* item) {
-				if (item->IsDead()) {
-					delete item;
-					return true;
-				}
-				return false;
-			});
+			
+			item_->Update();
 
 			size = meterSprite_->GetSize();
 			size.y = meter;
@@ -272,19 +274,11 @@ void GameScene::Update() {
 				Initialize();
 			    }
 		}
+		goal2_->Update();
 		debugCamera_->Update();
 		checkAllCollisions();
-		UpdateItemPopCommands();
-		for (Item* item : items_) {
-			item->Update();
-		}
-		items_.remove_if([](Item* item) {
-			if (item->IsDead()) {
-				delete item;
-				return true;
-			}
-			return false;
-		});
+		
+		item_->Update();
 
 		size = meterSprite_->GetSize();
 		size.y = meter;
@@ -392,18 +386,15 @@ void GameScene::Draw() {
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
 		obstacle_->Draw(viewProjection_);
-		for (Item* item : items_) {
-			item->Draw(viewProjection_);
-		}
+		goal_->Draw(viewProjection_);
+		item_->Draw(viewProjection_);
 		break;
 	case Stage2:
 		player_->Draw(viewProjection_);
 		skydome_->Draw(viewProjection_);
 		ground_->Draw(viewProjection_);
 		obstacle_->Draw(viewProjection_);
-		for (Item* item : items_) {
-			item->Draw(viewProjection_);
-		}
+		goal2_->Draw(viewProjection_);
 		break;
 	case GameOver:
 		
@@ -454,92 +445,38 @@ void GameScene::Draw() {
 }
 
 void GameScene::checkAllCollisions() {
-	Vector3 playerPos;
-	playerPos = player_->GetWorldPosition();
-	if (playerPos.z > 400.0f) {
-		isGameClear_ = true;
-		isStage1Clear_ = true;
+	if (isSelectStage1 == true) {
+		playerHitPos = player_->GetWorldPosition();
+		if (playerHitPos.z > 400.0f) {
+			isGameClear_ = true;
+			isStage1Clear_ = true;
+		}
+	}
+
+	if (isSelectStage1 == false) {
+		playerHitPos = player_->GetWorldPosition();
+		if (playerHitPos.z > 800.0f) {
+			isGameClear_ = true;
+		}
 	}
 
 	if (isPlayerPosY_ == true) {
-		if (playerPos.y <= 1.0f) {
+		if (playerHitPos.y <= 1.0f) {
 			scene = GameOver;
 		}
 	}
 
 	const float PLAYER_R = 1.5f;
 	const float ITEM_R = 1.5f;
-	Vector3 posA, posB;
-	
-	for (Item* item : items_) {
-		posA = item->GetWorldPosition();
+		posA = item_->GetWorldPosition();
 		posB = player_->GetWorldPosition();
 		float P = (posB.x - posA.x) * (posB.x - posA.x) + (posB.y - posA.y) * (posB.y - posA.y) +
 		          (posB.z - posA.z) * (posB.z - posA.z);
 		float R = (PLAYER_R + ITEM_R) * (PLAYER_R + ITEM_R);
 		if (P <= R) {
-			item->OnCollision();
+			item_->OnCollision();
 			meter -= 250;
 		}
-	}
 	
 
-}
-
-void GameScene::ItemDelete() { 
-	/*for (Item* item : items_) {
-		delete item;
-	}*/
-}
-
-void GameScene::AddItem(Vector3 position) { 
-	Item* item = new Item(); 
-	item->Initialize(itemModel_, position);
-	item->SetGameScene(this);
-	items_.push_back(item);
-}
-
-void GameScene::LoadItemStage1PopData() { 
-	std::ifstream file; 
-    file.open("Resources/stage1ItemPop.csv");
-	assert(file.is_open());
-	itemPopCommands << file.rdbuf();
-	file.close();
-}
-
-void GameScene::UpdateItemPopCommands() {
-	if (standFlag) {
-		standTime--;
-		if (standTime <= 0) {
-			standFlag = false;
-		}
-		return;
-	}
-	std::string line;
-	while (getline(itemPopCommands, line)) {
-		std::istringstream line_stream(line);
-		std::string word;
-		getline(line_stream, word, ',');
-		if (word.find("//") == 0) {
-			continue;
-		}
-		if (word.find("POP") == 0) {
-			getline(line_stream, word, ',');
-			float x = (float)std::atof(word.c_str());
-
-			getline(line_stream, word, ',');
-			float y = (float)std::atof(word.c_str());
-
-			getline(line_stream, word, ',');
-			float z = (float)std::atof(word.c_str());
-
-			AddItem(Vector3(x, y, z));
-		} else if (word.find("WAIT") == 0) {
-			getline(line_stream, word, ',');
-			int32_t waitTime = atoi(word.c_str());
-			standFlag = true;
-			standTime = waitTime;
-			break;
-		}
-	}
 }

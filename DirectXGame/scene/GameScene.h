@@ -15,6 +15,7 @@
 #include "Item.h"
 #include "Ground.h"
 #include "Obstacle.h"
+#include "Goal.h"
 #include <sstream>
 
 /// <summary>
@@ -50,14 +51,6 @@ public: // メンバ関数
 
 	void checkAllCollisions();
 
-	void AddItem(Vector3 position);
-
-	void LoadItemStage1PopData();
-
-	void UpdateItemPopCommands();
-
-	void ItemDelete();
-
 private: // メンバ変数
 
 	enum Scene {
@@ -86,6 +79,7 @@ private: // メンバ変数
 	Player* player_ = nullptr;
 	Model* playerModel_ = nullptr;
 	bool isPlayerPosY_;
+	Vector3 playerHitPos;
 
 	Vector3 worldPos;
 	Vector3 rotation;
@@ -103,8 +97,8 @@ private: // メンバ変数
 	Item* item_ = nullptr;
 	Model* itemModel_ = nullptr;
 	Vector3 itemPos_;
-	std::list<Item*> items_;
-	std::stringstream itemPopCommands;
+
+	Vector3 posA, posB;
 
 	int standFlag = false;
 	int standTime = 0;
@@ -153,6 +147,14 @@ private: // メンバ変数
 	uint32_t gameClearTexture_ = 0;
 	Sprite* gameClearSprite_ = nullptr;
 	bool isGameClear_;
+
+	Goal* goal_ = nullptr;
+	Model* goalModel_ = nullptr;
+	Vector3 goalPos_ = {0.0f, 50.0f, 400.0f};
+
+	Goal* goal2_ = nullptr;
+	Model* goalModel2_ = nullptr;
+	Vector3 goalPos2_ = {0.0f, 50.0f, 800.0f};
 
 	// 障害物3Dモデル
 	Model* obstacleModel_ = nullptr;

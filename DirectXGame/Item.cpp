@@ -9,6 +9,7 @@ void Item::Initialize(Model* model,Vector3& position) {
 	worldTransform_.scale_ = {1.5f, 1.5f, 1.5f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 	worldTransform_.translation_ = position;
+	isItem_ = false;
 	worldTransform_.Initialize();
 }
 void Item::Update() { worldTransform_.UpdateMatrix(); }

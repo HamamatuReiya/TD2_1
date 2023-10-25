@@ -16,7 +16,7 @@ public:
 	void Draw(ViewProjection& viewProjection);
 	void OnCollision();
 	Vector3 GetWorldPosition();
-	bool IsDead() const { return isItem_; }
+	bool GetIsItem() const { return isItem_; }
 	void SetIsItem(bool isItem) { isItem_ = isItem; }
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
