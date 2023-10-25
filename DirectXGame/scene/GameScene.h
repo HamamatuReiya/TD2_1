@@ -16,6 +16,23 @@
 #include "Ground.h"
 #include "Obstacle.h"
 #include "Obstacle2.h"
+#include "Obstacle3.h"
+#include "Obstacle4.h"
+#include "Obstacle5.h"
+#include "Obstacle6.h"
+#include "Obstacle7.h"
+#include "Obstacle8.h"
+#include "Obstacle9.h"
+#include "Obstacle10.h"
+#include "Obstacle11.h"
+#include "Obstacle12.h"
+#include "Obstacle13.h"
+#include "Breezeway.h"
+#include "Breezeway2.h"
+#include "Breezeway3.h"
+#include "Breezeway4.h"
+#include "Breezeway5.h"
+#include "Breezeway6.h"
 #include <sstream>
 
 /// <summary>
@@ -163,11 +180,30 @@ private: // メンバ変数
 
 	// 障害物3Dモデル
 	Model* obstacleModel_ = nullptr;
+	Model* breezewayModel_ = nullptr;
 	// 障害物
 	Obstacle* obstacle_ = nullptr;
 	Obstacle2* obstacle2_ = nullptr;
+	Obstacle3* obstacle3_ = nullptr;
+	Obstacle4* obstacle4_ = nullptr;
+	Obstacle5* obstacle5_ = nullptr;
+	Obstacle6* obstacle6_ = nullptr;
+	Obstacle7* obstacle7_ = nullptr;
+	Obstacle8* obstacle8_ = nullptr;
+	Obstacle9* obstacle9_ = nullptr;
+	Obstacle10* obstacle10_ = nullptr;
+	Obstacle11* obstacle11_ = nullptr;
+	Obstacle12* obstacle12_ = nullptr;
+	Obstacle13* obstacle13_ = nullptr;
+	Breezeway* breezeway_ = nullptr;
+	Breezeway2* breezeway2_ = nullptr;
+	Breezeway3* breezeway3_ = nullptr;
+	Breezeway4* breezeway4_ = nullptr;
+	Breezeway5* breezeway5_ = nullptr;
+	Breezeway6* breezeway6_ = nullptr;
 	// 障害物テクスチャハンドル
 	uint32_t building_ = 0;
+	uint32_t building2_ = 0;
 
 	//サウンド
 	uint32_t bgmHandle_ = 0;
