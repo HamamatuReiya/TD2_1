@@ -161,6 +161,13 @@ private: // メンバ変数
 	// 障害物テクスチャハンドル
 	uint32_t building_ = 0;
 
+	//サウンド
+	uint32_t bgmHandle_ = 0;
+	uint32_t bgmLoop_ = 0;
+	bool isBgm_ = false;
+
+	uint32_t soundHandle_ = 0;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>

@@ -124,11 +124,21 @@ void GameScene::Initialize() {
 	gameClearSprite_ = Sprite::Create(gameClearTexture_, {0, 0});
 	isGameClear_ = false;
 
+	//サウンド読み込み
+	bgmHandle_ = audio_->LoadWave("bgm.wav");
+
+	soundHandle_ = audio_->LoadWave("energy.wav");
+
 	////////////////
 
 }
 
 void GameScene::Update() { 
+
+	if (isBgm_ == false) {
+		bgmLoop_ = audio_->PlayWave(bgmHandle_, true);
+		isBgm_ = true;
+	}
 
 	switch (scene) {
 	case Title:
@@ -479,6 +489,7 @@ void GameScene::checkAllCollisions() {
 		float R = (PLAYER_R + ITEM_R) * (PLAYER_R + ITEM_R);
 		if (P <= R) {
 			item->OnCollision();
+			audio_->PlayWave(soundHandle_);
 			meter -= 250;
 		}
 	}
